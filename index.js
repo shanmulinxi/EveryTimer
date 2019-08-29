@@ -11,15 +11,18 @@ fs.readFile('config.json', function (err, data) {
     global.config = config
     
 
-    const test = require("./mysql/index")
+    run(config)
  });
 
-
- function run(config){
+ function initDebug(config){
     if(!config['debug']){
         console.log = ()=>{}
     }
-    console.log('RUNING')
+ }
+
+ function run(config){
+    
+    console.log('RUNING SERVER')
     server.start();
  }
 // var router = require("./router");

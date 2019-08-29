@@ -15,6 +15,7 @@ module.exports =  class Control {
         _controlName = controlName
         const route = this.initRouter()
         app.use('/'+controlName, this.initIntercept ,route)
+        console.log(controlName + " control init");
     }
 
     /**
