@@ -12,8 +12,6 @@ function load(app) {
         console.log('拦截',req.originalUrl);// '/new'
         next()
      })
-
- 
-}
-   
+} 
 exports.load = load;
+

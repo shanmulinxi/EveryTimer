@@ -10,17 +10,17 @@ fs.readFile('config.json', function (err, data) {
     const config  = JSON.parse(data)
     global.config = config
     
-
-    run(config)
+    
+    run()
  });
 
  function initDebug(config){
-    if(!config['debug']){
+    if(!config['Debug']){
         console.log = ()=>{}
     }
  }
 
- function run(config){
+ function run(){
     
     console.log('RUNING SERVER')
     server.start();

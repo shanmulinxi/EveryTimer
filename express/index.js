@@ -20,6 +20,8 @@ function init() {
        
       })
 }
+
+//body 解析器
 function initBodyParser(app){ 
     console.log("initBodyParser")
     const bodyParser = require('body-parser');

@@ -1,11 +1,18 @@
 
 
 
-var expressAPP = require("./express/index");
+var ExpressAPP = require("./express/index");
+var Mysql = require("./mysql/index")
+
 
 function start() {
   console.log("server start")
-  expressAPP.init()
+
+  
+  Mysql.initMysql()
+  // require("./test")
+  ExpressAPP.init()
+
 }
  
 exports.start = start;

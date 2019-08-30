@@ -15,6 +15,9 @@ module.exports =  class Control {
         _controlName = controlName
         const route = this.initRouter()
         app.use('/'+controlName, this.initIntercept ,route)
+        app.use(this.logErrors)
+        app.use(this.clientErrorHandler)
+        app.use(this.errorHandler)
         console.log(controlName + " control init");
     }
 
@@ -38,7 +41,30 @@ module.exports =  class Control {
          return _router
     }
 
-    toString(){
-        console.log("CONTROL")
+    failReturn(res,return_obc={},return_msg="fail",return_code="fail"){
+        res.json({ return_code, return_msg, return_obc})
     }
+    
+    successReturn(res,return_obc={},return_msg="success",return_code="success"){
+        res.json({ return_code, return_msg, return_obc})
+    }
+    logErrors (err, req, res, next) {
+        console.error("logErrors",err.stack)
+        next(err)
+    }
+
+    clientErrorHandler (err, req, res, next) {
+        if (req.xhr) {
+            res.status(500).send({ error: 'Something failed!' })
+        } else {
+            next(err)
+        }
+    }
+
+    errorHandler (err, req, res, next) {
+        res.status(500)
+        res.render('error', { error: err })
+    }
+      
+      
 }
