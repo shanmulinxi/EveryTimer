@@ -7,17 +7,15 @@ const router = express.Router();
 /**
  * 自定义 http控制器
  */
-var _controlName = ''
 module.exports =  class Control {
     
-    
     constructor(controlName,app){
-        _controlName = controlName
+        controlName
         const route = this.initRouter()
         app.use('/'+controlName, this.initIntercept ,route)
-        app.use(this.logErrors)
-        app.use(this.clientErrorHandler)
-        app.use(this.errorHandler)
+        // app.use(this.logErrors)
+        // app.use(this.clientErrorHandler)
+        // app.use(this.errorHandler)
         console.log(controlName + " control init");
     }
 
@@ -35,9 +33,7 @@ module.exports =  class Control {
      * 初始化路由
      */
     initRouter(){
-        const _router =  router.get('/',function (req, res) {
-            res.send('this is '+ _controlName );
-         })
+        const _router =  router
          return _router
     }
 

@@ -9,7 +9,7 @@ function init() {
     cors(app_g)
     initBodyParser(app_g)
     initModel(app_g)
-
+    
 
     var server = app_g.listen(6689, function () {
  
@@ -34,6 +34,8 @@ function initModel(app){
     const intercept = require("./intercept");
     intercept.load(app)
 
+    const staticPage = require("./web/index")
+    new staticPage(app)
     // const common = require("./common/common");
     // common.load(app)
 

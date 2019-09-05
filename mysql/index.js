@@ -40,24 +40,35 @@ function closeMysql(){
 exports.closeMysql = closeMysql
 
 
-function selectData(tableName){
+function selectData(tableName,whereList = [],limitSize = 1){
+  let wheretext = ""
+  if(whereList.length>0){
+    wheretext += " WHERE "
+    for(let item of whereList){
+      wheretext += "'"+item.Name+"'"+" = '"+item.Name+"'"
+    }
+  }
   //查询数据
-  var  sql = 'SELECT * FROM '+ MysqlMap.g_table(tableName);
-  MysqlConnection.query(sql,function (err, result) {
+  const  sql = 'SELECT * FROM '+ MysqlMap.g_table(tableName) +" LIMIT "+limitSize;
+
+  return new Promise(function (resolve,reject){
+    MysqlConnection.query(sql,function (err, result) {
     if(err){
       console.log('[SELECT ERROR] - ',err.message);
       return;
+      reject({state:false,code:"false",err:err})
     }
-  console.log('--------------------------SELECT----------------------------');
-  console.log(result);
-  console.log('------------------------------------------------------------\n\n');
+    resolve({state:true,code:"true",result})
   });
+
+  })
+  
 }
 
 exports.selectData = selectData
 
 
-function insertData(tableName,obc){
+function  insertData(tableName,obc){
   const obcKey = Object.keys(obc)
   const obcParam = []
   const obcValue = []
@@ -69,17 +80,18 @@ function insertData(tableName,obc){
   //插入数据
   var  addSql = 'INSERT INTO '+ MysqlMap.g_table(tableName) +'('+obcKey.join(',')+') VALUES('+obcParam.join(',')+')';
   
-  //增
-  MysqlConnection.query(addSql,obcValue,function (err, result) {
-          if(err){
-          console.log('[INSERT ERROR] - ',err.message);
-          return;
-          }        
-        console.log('--------------------------INSERT----------------------------');
-        //console.log('INSERT ID:',result.insertId);        
-        console.log('INSERT ID:',result);        
-        console.log('-----------------------------------------------------------------\n\n');  
-  });
+  return new Promise(function (resolve,reject){
+    //增
+    MysqlConnection.query(addSql,obcValue,function (err, result) {
+      if(err){
+        console.log('[INSERT ERROR] - ',err.message);
+        reject({state:false,code:"false",err:err}) 
+      }              
+      resolve({state:true,code:"true",result:result})
+      
+    });
+  })
+  
 
   
 }
