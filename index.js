@@ -10,16 +10,19 @@ fs.readFile('config.json', function (err, data) {
     const config  = JSON.parse(data)
     global.config = config
     
-
-    const test = require("./mysql/index")
+    
+    run()
  });
 
-
- function run(config){
-    if(!config['debug']){
+ function initDebug(config){
+    if(!config['Debug']){
         console.log = ()=>{}
     }
-    console.log('RUNING')
+ }
+
+ function run(){
+    
+    console.log('RUNING SERVER')
     server.start();
  }
 // var router = require("./router");

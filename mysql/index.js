@@ -1,7 +1,7 @@
 
 
 
-
+var MysqlMap = require("./map")
 let MysqlConnection = null
 /**
  *初始化MYSQL并连接
@@ -9,13 +9,13 @@ let MysqlConnection = null
  */
 function initMysql(){
     const Mysql = require('mysql');
-    
-    const MysqlConfig = global.config.debug ? global.config.debug_mysql : global.config.mysql
-    console.log("Mysql",MysqlConfig)
+    const MysqlConfig = global.config.Debug === false  ?  global.config.Mysql : global.config.DebugMysql
+    console.log("Mysql connecting")
     MysqlConnection = Mysql.createConnection(MysqlConfig);
     MysqlConnection.connect();
 }
 
+exports.initMysql = initMysql
 
 /**
  * 检查MYSQL连接状态
@@ -37,43 +37,69 @@ function closeMysql(){
   if(!checkConnection())return
   MysqlConnection.end();
 }
-
-function selectData(){
-
-}
-
-exports.initMysql = initMysql
 exports.closeMysql = closeMysql
 
 
-//查询数据
-// var  sql = 'SELECT * FROM websites';
-// Connection.query(sql,function (err, result) {
-//   if(err){
-//     console.log('[SELECT ERROR] - ',err.message);
-//     return;
-//   }
-//  console.log('--------------------------SELECT----------------------------');
-//  console.log(result);
-//  console.log('------------------------------------------------------------\n\n');
-// });
+function selectData(tableName,whereList = [],limitSize = 1){
+  let wheretext = ""
+  if(whereList.length>0){
+    wheretext += " WHERE "
+    for(let item of whereList){
+      wheretext += "'"+item.Name+"'"+" = '"+item.Name+"'"
+    }
+  }
+  //查询数据
+  const  sql = 'SELECT * FROM '+ MysqlMap.g_table(tableName) +" LIMIT "+limitSize;
+
+  return new Promise(function (resolve,reject){
+    MysqlConnection.query(sql,function (err, result) {
+    if(err){
+      console.log('[SELECT ERROR] - ',err.message);
+      return;
+      reject({state:false,code:"false",err:err})
+    }
+    resolve({state:true,code:"true",result})
+  });
+
+  })
+  
+}
+
+exports.selectData = selectData
 
 
-//插入数据
-// var  addSql = 'INSERT INTO websites(Id,name,url,alexa,country) VALUES(0,?,?,?,?)';
-// var  addSqlParams = ['菜鸟工具', 'https://c.runoob.com','23453', 'CN'];
-// //增
-// connection.query(addSql,addSqlParams,function (err, result) {
-//         if(err){
-//          console.log('[INSERT ERROR] - ',err.message);
-//          return;
-//         }        
- 
-//        console.log('--------------------------INSERT----------------------------');
-//        //console.log('INSERT ID:',result.insertId);        
-//        console.log('INSERT ID:',result);        
-//        console.log('-----------------------------------------------------------------\n\n');  
-// });
+function  insertData(tableName,obc){
+  const obcKey = Object.keys(obc)
+  const obcParam = []
+  const obcValue = []
+  for( let key of obcKey){
+    obcParam.push('?')
+    obcValue.push(obc[key])
+  }
+
+  //插入数据
+  var  addSql = 'INSERT INTO '+ MysqlMap.g_table(tableName) +'('+obcKey.join(',')+') VALUES('+obcParam.join(',')+')';
+  
+  return new Promise(function (resolve,reject){
+    //增
+    MysqlConnection.query(addSql,obcValue,function (err, result) {
+      if(err){
+        console.log('[INSERT ERROR] - ',err.message);
+        reject({state:false,code:"false",err:err}) 
+      }              
+      resolve({state:true,code:"true",result:result})
+      
+    });
+  })
+  
+
+  
+}
+
+exports.insertData = insertData
+
+
+
 
 
 //更新数据
