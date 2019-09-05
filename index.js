@@ -1,4 +1,3 @@
-
 const server = require("./server");
 const fs = require("fs");
 
@@ -7,24 +6,23 @@ fs.readFile('config.json', function (err, data) {
     if (err) {
         return console.error(err);
     }
-    const config  = JSON.parse(data)
+    const config = JSON.parse(data)
+
     global.config = config
-    
-    
     run()
- });
+});
 
- function initDebug(config){
-    if(!config['Debug']){
-        console.log = ()=>{}
+function initDebug(config) {
+    if (!config['Debug']) {
+        console.log = () => {}
     }
- }
+}
 
- function run(){
-    
+function run() {
+
     console.log('RUNING SERVER')
     server.start();
- }
+}
 // var router = require("./router");
 //  console.log = ()=>{}
 // server.start();
