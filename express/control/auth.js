@@ -39,9 +39,8 @@ module.exports = class auth extends Control {
             })
 
         })
-
         _router.post('/signIn', (req, res) => {
-            console.log(req.get("loginName"))
+            console.log(req.cookies)
             const bodyloginName = req.body.loginName
             const bodypassword = req.body.password
             //登录名称初步验证
@@ -61,7 +60,7 @@ module.exports = class auth extends Control {
                 return
             }
 
-            Mysql.run("SELECT * FROM base_user WHERE loginName = ? LIMIT 2", [bodyloginName]).then(
+            Mysql.run("SELECT * FROM base_user WHERE loginName = ? LIMIT 0,2", [bodyloginName]).then(
                 result => {
                     console.log(result)
                     if (result.length == 0) {
@@ -78,27 +77,41 @@ module.exports = class auth extends Control {
                         })
                         return
                     }
-                    "123".toUpperCase()
                     const userdata = result[0]
                     const postpassword = this.creatMD5(bodypassword).toUpperCase()
-                    console.log(postpassword)
+                    // console.log(postpassword)
                     if (userdata["password"].toUpperCase() === postpassword) {
                         let tokenContent = {
-                            userName: req.body.userName,
-                            loginName: req.body.loginName
+                            userName: userdata["userName"],
+                            loginName: userdata["loginName"]
                         }; // 要生成token的主题信息
                         let secretOrPrivateKey = global.config.TokenKey; // 这是加密的key（密钥）
                         let token = Jwt.sign(tokenContent, secretOrPrivateKey, {
-                            //expiresIn: 60 * 60 * 1 // 1小时过期
+                            expiresIn: 60 * 60 * 1 // 1小时过期
                         });
+                        const sql = "UPDATE base_user SET authorization = ? , loginTime = ? , loginError = ? WHERE id = ?"
+                        Mysql.run(sql,
+                            [
+                                token,
+                                Moment().format('YYYY-MM-DD hh:mm:ss'),
+                                0,
+                                userdata["id"]
+                            ])
                         this.successReturn(res, {
                             return_obc: {
-                                Authorization: token,
-                                userdata
+                                authorization: token,
+                                username:userdata["userName"]
                             }
                         })
                         return
                     } else {
+                        const sql = "UPDATE base_user SET loginTime = ? , loginError = ? WHERE id = ?"
+                        Mysql.run(sql,
+                            [
+                                Moment().format('YYYY-MM-DD hh:mm:ss'),
+                                userdata["loginError"]+1,
+                                userdata["id"]
+                            ])
                         this.failReturn(res, {
                             return_msg: "PASSWORD ERROR",
                             return_code: 10005
@@ -106,7 +119,12 @@ module.exports = class auth extends Control {
                         return
                     }
                 }
-            )
+            ).catch(error=>{
+                this.failReturn(res, {
+                    return_code: 10006,
+                    return_obc:error
+                })
+            })
 
 
             // // res.json({status:1,mess:'ok',Authorization:token,userName:req.body.userName})

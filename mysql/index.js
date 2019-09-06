@@ -45,7 +45,6 @@ exports.closeMysql = closeMysql
  * @param {*} param 
  */
 function run(sql, param = []) {
-  console.log(param)
   return new Promise(function (resolve, reject) {
     MysqlConnection.query(sql, param, function (err, result) {
       if (err) {
@@ -57,7 +56,6 @@ function run(sql, param = []) {
   })
 }
 exports.run = run
-
 function selectData(tableName, whereList = {}, limitSize = 1) {
 
   //查询数据
@@ -76,9 +74,9 @@ function selectData(tableName, whereList = {}, limitSize = 1) {
       }
       resolve({
         state: true,
-        code: "true",
-        result
-      })
+        code: "true", 
+        result 
+      }) 
     });
 
   })

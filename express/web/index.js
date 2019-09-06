@@ -21,7 +21,7 @@ module.exports =  class staticPage extends Control{
     }
     initRouter(){
         const _router =  super.initRouter()
-        _router.get('/',(req, res)=>{
+        _router.get('/',(req, res)=>{  
             res.sendFile( PagePath + "/index.html" );
          })
         _router.get('/index',(req, res)=>{

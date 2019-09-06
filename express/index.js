@@ -7,6 +7,7 @@ function init() {
     const app_g = express();
     console.log("express init");
     cors(app_g)
+    initCookieParser(app_g)
     initBodyParser(app_g)
     initModel(app_g)
     
@@ -21,6 +22,10 @@ function init() {
       })
 }
 
+function initCookieParser(app){
+    const cookieParser = require('cookie-parser');
+    app.use(cookieParser());
+}
 //body 解析器
 function initBodyParser(app){ 
     console.log("initBodyParser")
