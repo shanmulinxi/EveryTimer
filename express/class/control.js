@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const Jwt = require('jsonwebtoken'); //用来生成token
 
 /**
  * 自定义 http控制器
@@ -62,6 +62,24 @@ module.exports = class Control {
             return_obc
         })
     }
+
+    checkCookies(req) {
+        console.log(req.cookies)
+        let secretOrPrivateKey = global.config.TokenKey; // 这是加密的key（密钥）
+        let token = req.cookies["authorization"]; // 从Authorization中获取token
+        return new Promise(function (resolve, reject) {
+            Jwt.verify(token, secretOrPrivateKey, (err, decode) => {
+                if (err) { //  时间失效的时候 || 伪造的token
+                    console.log(err)
+                    reject(err)
+                } else {
+                    resolve(decode)
+                }
+            })
+        })
+
+    }
+
     logErrors(err, req, res, next) {
         console.error("logErrors", err.stack)
         next(err)

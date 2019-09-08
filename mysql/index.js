@@ -1,4 +1,4 @@
-var MysqlMap = require("./map")
+var MysqlMap = require('./map')
 let MysqlConnection = null
 
 exports.mysqlCon = MysqlConnection
@@ -7,12 +7,15 @@ exports.mysqlCon = MysqlConnection
  *
  */
 function initMysql() {
-  const Mysql = require('mysql');
-  const MysqlConfig = global.config.Debug === false ? global.config.Mysql : global.config.DebugMysql
-  console.log("Mysql connecting")
-  MysqlConnection = Mysql.createConnection(MysqlConfig);
-  MysqlConnection.connect();
-  console.log("Mysql connect finish")
+  const Mysql = require('mysql')
+  const MysqlConfig =
+    global.config.Debug === false
+      ? global.config.Mysql
+      : global.config.DebugMysql
+  console.log('Mysql connecting')
+  MysqlConnection = Mysql.createConnection(MysqlConfig)
+  MysqlConnection.connect()
+  console.log('Mysql connect finish')
 }
 
 exports.initMysql = initMysql
@@ -23,7 +26,7 @@ exports.initMysql = initMysql
 
 function checkConnection() {
   if (MysqlConnection === null) {
-    console.error("MysqlConnection is null")
+    console.error('MysqlConnection is null')
     return false
   }
   return true
@@ -35,56 +38,54 @@ function checkConnection() {
  */
 function closeMysql() {
   if (!checkConnection()) return
-  MysqlConnection.end();
+  MysqlConnection.end()
 }
 exports.closeMysql = closeMysql
 
 /**
  * 直接运行MYSQL命令
- * @param {*} sql 
- * @param {*} param 
+ * @param {*} sql
+ * @param {*} param
  */
 function run(sql, param = []) {
-  return new Promise(function (resolve, reject) {
-    MysqlConnection.query(sql, param, function (err, result) {
+  return new Promise(function(resolve, reject) {
+    MysqlConnection.query(sql, param, function(err, result) {
       if (err) {
-        console.log('[INSERT ERROR] - ', err.message);
+        console.log('[INSERT ERROR] - ', err.message)
         reject(err)
       }
       resolve(result)
-    });
+    })
   })
 }
 exports.run = run
+
 function selectData(tableName, whereList = {}, limitSize = 1) {
-
   //查询数据
-  const sql = 'SELECT * FROM ' + MysqlMap.g_table(tableName) + " LIMIT " + limitSize;
+  const sql =
+    'SELECT * FROM ' + MysqlMap.g_table(tableName) + ' LIMIT ' + limitSize
 
-  return new Promise(function (resolve, reject) {
-    MysqlConnection.query(sql, function (err, result) {
+  return new Promise(function(resolve, reject) {
+    MysqlConnection.query(sql, function(err, result) {
       if (err) {
-        console.log('[SELECT ERROR] - ', err.message);
-        return;
+        console.log('[SELECT ERROR] - ', err.message)
+        return
         reject({
           state: false,
-          code: "false",
+          code: 'false',
           err: err
         })
       }
       resolve({
         state: true,
-        code: "true", 
-        result 
-      }) 
-    });
-
+        code: 'true',
+        result
+      })
+    })
   })
-
 }
 
 exports.selectData = selectData
-
 
 function insertData(tableName, obc) {
   const obcKey = Object.keys(obc)
@@ -96,37 +97,36 @@ function insertData(tableName, obc) {
   }
 
   //插入数据
-  var addSql = 'INSERT INTO ' + MysqlMap.g_table(tableName) + '(' + obcKey.join(',') + ') VALUES(' + obcParam.join(',') + ')';
+  var addSql =
+    'INSERT INTO ' +
+    MysqlMap.g_table(tableName) +
+    '(' +
+    obcKey.join(',') +
+    ') VALUES(' +
+    obcParam.join(',') +
+    ')'
 
-  return new Promise(function (resolve, reject) {
+  return new Promise(function(resolve, reject) {
     //增
-    MysqlConnection.query(addSql, obcValue, function (err, result) {
+    MysqlConnection.query(addSql, obcValue, function(err, result) {
       if (err) {
-        console.log('[INSERT ERROR] - ', err.message);
+        console.log('[INSERT ERROR] - ', err.message)
         reject({
           state: false,
-          code: "false",
+          code: 'false',
           err: err
         })
       }
       resolve({
         state: true,
-        code: "true",
+        code: 'true',
         result: result
       })
-
-    });
+    })
   })
-
-
-
 }
 
 exports.insertData = insertData
-
-
-
-
 
 //更新数据
 // var modSql = 'UPDATE websites SET name = ?,url = ? WHERE Id = ?';
@@ -136,7 +136,7 @@ exports.insertData = insertData
 //    if(err){
 //          console.log('[UPDATE ERROR] - ',err.message);
 //          return;
-//    }        
+//    }
 //   console.log('--------------------------UPDATE----------------------------');
 //   console.log('UPDATE affectedRows',result.affectedRows);
 //   console.log('-----------------------------------------------------------------\n\n');
@@ -149,9 +149,9 @@ exports.insertData = insertData
 //         if(err){
 //           console.log('[DELETE ERROR] - ',err.message);
 //           return;
-//         }        
+//         }
 
 //        console.log('--------------------------DELETE----------------------------');
 //        console.log('DELETE affectedRows',result.affectedRows);
-//        console.log('-----------------------------------------------------------------\n\n');  
+//        console.log('-----------------------------------------------------------------\n\n');
 // });
