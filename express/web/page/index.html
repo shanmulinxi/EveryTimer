@@ -1,239 +1,229 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"
+    />
     <title>WelCome</title>
 
-    <!-- <link rel="stylesheet" href="css/style.css"> -->
+    <link rel="stylesheet" href="../public/css/style.css" />
+
     <style>
-        html {
-            font-size: 100%;
-            height: 100%;
-            width: 100%;
-        }
-        
-        body {
-            font-size: 0.14rem;
-            margin: 0;
-            background: #000;
-            height: 100%;
-            width: 100%;
-            /* border: #FFF 5px solid; */
+      body {
+        background: #000;
+      }
 
-        }
-        .fontStyle{
-            font-family:'Microsoft YaHei','Microsoft JhengHei','SimHei','YouYuan';
-            font-weight:bold;
-        }
-        .whiteBorder {
-            border: #FFF 0.3rem solid;
-        }
-        .whiteDotBorder {
-            border: #FFF 0.3rem dotted;
-        }
-        .flexCenter {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+      .fontStyle {
+        font-weight: bold;
+      }
 
-        .container {
+      .content {
+        height: 50%;
+        width: 80%;
+        border-radius: 1rem;
+      }
 
-            height: 100%;
-            width: 100%;
-        }
-
+      @media screen and (min-width: 400px) and (min-height: 800px) {
         .content {
-            height: 50%;
-            width: 80%;
-            border-radius: 30px;
+          height: 30%;
+          width: 30%;
         }
+      }
 
-        @media screen and (min-width: 400px)and (min-height:800px) {
-            .content {
-                height: 30%;
-                width: 30%;
-            }
+      .operateDiv {
+        height: 20%;
+        width: 80%;
+        border-radius: 1rem;
+      }
 
-        }
+      input {
+        background: transparent;
+        color: #fff;
+        width: 100%;
+        height: 100%;
+        border-width: 0;
+        font-size: 1.5rem;
+      }
 
-        .operateDiv {
-            height: 20%;
-            width: 80%;
-        }
+      button {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        color: #fff;
+        border-width: 0;
+        font-size: 1.5rem;
+      }
 
-        input {
-            background: #000;
-            color: #FFF;
-            width: 100%;
-            height: 100%;
-            border-width: 0;
-            font-size: 1.5rem;
-        }
+      .message {
+        font-size: 2rem;
+        color: #fff;
+        text-align: center;
+      }
 
-        button {
-            width: 100%;
-            height: 100%;
-            background: #000;
-            color: #FFF;
-            border-width: 0;
-            font-size: 1.5rem;
-        }
+      .msgerror {
+        color: #88001b;
+      }
 
-        .message {
-            font-size: 2rem;
-            color: #FFF;
-            text-align:center;
-        }
-        .msgerror{
-            color:#88001B;
-        }
-        ::-webkit-input-placeholder {
-            /* Chrome/Opera/Safari */
-            color: #FFF;
-        }
+      ::-webkit-input-placeholder {
+        /* Chrome/Opera/Safari */
+        color: #fff;
+      }
 
-        ::-moz-placeholder {
-            /* Firefox 19+ */
-            color: #FFF;
-        }
+      ::-moz-placeholder {
+        /* Firefox 19+ */
+        color: #fff;
+      }
 
-        :-ms-input-placeholder {
-            /* IE 10+ */
-            color: #FFF;
-        }
+      :-ms-input-placeholder {
+        /* IE 10+ */
+        color: #fff;
+      }
 
-        :-moz-placeholder {
-            /* Firefox 18- */
-            color: #FFF;
-        }
+      :-moz-placeholder {
+        /* Firefox 18- */
+        color: #fff;
+      }
     </style>
     <script src="../public/jquery-3.4.1.js"></script>
     <script src="../public/vue.js"></script>
-    <script src="../public/moment.js"></script>
-    <script src='../public/snowflakes.min.js'></script>
-</head>
+    <script src="../public/snowflakes.min.js"></script>
+    <script src="../public/common.js"></script>
+  </head>
 
-<body>
-
-
-
+  <body>
     <div class="container flexCenter" id="app">
-        <div class="content whiteBorder flexCenter" >
-            <div  class="flexCenter" style="height:100%;width:100%;justify-content: space-around;" v-if="!loginloading&&!msgShow">
-            <div class="operateDiv whiteBorder flexCenter" >
-                <input type="text" class="flexCenter fontStyle" style="text-align: center" v-bind:value="loginName"
-                    @input="loginNameChange" placeholder="USERNAME">
-            </div>
-            <div class="operateDiv whiteBorder flexCenter" >
-                <input type="password" class="flexCenter fontStyle" style="text-align: center" v-bind:value="password"
-                    @input="passwordChange" placeholder="PASSWORD">
-            </div>
-            <div class="operateDiv whiteBorder flexCenter">
-                <button class="fontStyle flexCenter" type="button" @click="signin">{{buttonText}}</button>
-            </div>
-            </div>
-            <div  class="message fontStyle"  v-if="loginloading||msgShow">
-                <p class="messagep"  v-bind:class="{msgerror:msgError}">{{message}}</p>
-            </div>
+      <div class="content whiteBorder flexCenter">
+        <div
+          class="flexCenter"
+          style="height:100%;width:100%;justify-content: space-around;"
+          v-if="!loginloading&&!msgShow"
+        >
+          <div class="operateDiv whiteBorder flexCenter">
+            <input
+              type="text"
+              class="flexCenter fontStyle"
+              style="text-align: center"
+              v-bind:value="loginName"
+              @input="loginNameChange"
+              placeholder="USERNAME"
+            />
+          </div>
+          <div class="operateDiv whiteBorder flexCenter">
+            <input
+              type="password"
+              class="flexCenter fontStyle"
+              style="text-align: center"
+              v-bind:value="password"
+              @input="passwordChange"
+              placeholder="PASSWORD"
+            />
+          </div>
+          <div class="operateDiv whiteBorder flexCenter">
+            <button class="fontStyle flexCenter" type="button" @click="signin">
+              {{ buttonText }}
+            </button>
+          </div>
         </div>
+        <div class="message fontStyle" v-if="loginloading||msgShow">
+          <p class="messagep" v-bind:class="{msgerror:msgError}">
+            {{ message }}
+          </p>
+        </div>
+      </div>
     </div>
     <script>
-        $(()=>{            
-            $(document).ajaxComplete(function(event, jqxhr, settings, exception) {
-                if(settings.url==="/auth/signIn"){
-                    app.loginloading = false
-                }
-            });
-            $(document).ajaxError(function(event, jqxhr, settings, exception) {
-                if(settings.url==="/auth/signIn"){
-                    app.loginloading = false
-                    app.showMsg("NETWORK ERROR")
-                }
-            });
+      $(() => {
+        $(document).ajaxComplete(function(event, jqxhr, settings, exception) {
+          if (settings.url === '/auth/signIn') {
+            app.loginloading = false
+          }
         })
+        $(document).ajaxError(function(event, jqxhr, settings, exception) {
+          if (settings.url === '/auth/signIn') {
+            app.loginloading = false
+            app.showMsg('NETWORK ERROR')
+          }
+        })
+      })
 
-        var sf = new Snowflakes({
-            color: "#ffffff",
-            count: 75, 
-            minOpacity: 0.2,
-            maxOpacity: 0.6
-        });
-        var app = new Vue({
-            el: '#app',
-            data: {
-                loginloading : false,
-                msgShow:false,
-                message: 'LOADING',
-                anima:'',
-                buttonText: "SIGN IN",
-                loginName: "",
-                password: "",
-                msgError:false,
-            },
-            methods: {
-                loginloadAnima:function(){
-                    if(this.loginloading){
-                        if(this.anima.length>=3){
-                            this.anima = ''
-                        }else{
-                            this.anima = this.anima+'.'
-                        }
-                        this.message = 'LOADING'+this.anima
-                        setTimeout(()=>{this.loginloadAnima()},500)
-                    }
-                },
-                loginNameChange: function (event) {
-                    this.loginName = event.target.value
-                },
-                passwordChange: function (event) {
-                    this.password = event.target.value
-                },
-                signin: function(){
-                    this.loginloading = true
-                    this.loginloadAnima()
-                    $.post('/auth/signIn', {
-                        loginName: this.loginName,
-                        password: this.password,
-                    }, (res)=>{
-                        this.loginloading = false
-                        //登录成功
-                        console.log(res)
-                        if(res.return_code == 200 && res.return_obc){
-                            this.showMsg(res.return_msg,false)
-                            setTimeout(()=>{window.location.href="http://www.baidu.com"},1000)
-                            this.setCookie(res.return_obc)
-                        }else{
-                            this.showMsg(res.return_msg)
-                        }
-                    })
-                },
-                setCookie: function(obc){
-                    const expireData = new Date()
-                    const exdays = 100
-                    expireData.setTime(expireData.getTime()+(exdays * 24 * 60 * 60 * 1000))
-                    for(let key in obc){
-                        console.log("key = "+key+"   :   "+obc[key])
-                        document.cookie=`${key}=${obc[key]}; expires=${expireData.toGMTString()}; path=/`;
-                    }
-                    
-                },
-                showMsg:function(msg = "",error = true,time=2500){
-                    this.msgShow = true
-                    this.msgError = error
-                    this.message = msg
-                    setTimeout(()=>{
-                        this.msgShow = false
-                        this.msgError = false
-                    },time)
-                }
+      var sf = new Snowflakes({
+        color: '#ffffff',
+        count: 75,
+        minOpacity: 0.2,
+        maxOpacity: 0.6
+      })
+      var app = new Vue({
+        el: '#app',
+        data: {
+          loginloading: false,
+          msgShow: false,
+          message: 'LOADING',
+          anima: '',
+          buttonText: 'SIGN IN',
+          loginName: '',
+          password: '',
+          msgError: false
+        },
+        methods: {
+          loginloadAnima: function() {
+            if (this.loginloading) {
+              if (this.anima.length >= 3) {
+                this.anima = ''
+              } else {
+                this.anima = this.anima + '.'
+              }
+              this.message = 'LOADING' + this.anima
+              setTimeout(() => {
+                this.loginloadAnima()
+              }, 500)
             }
-        })
+          },
+          loginNameChange: function(event) {
+            this.loginName = event.target.value
+          },
+          passwordChange: function(event) {
+            this.password = event.target.value
+          },
+          signin: function() {
+            this.loginloading = true
+            this.loginloadAnima()
+            $.post(
+              '/auth/signIn',
+              {
+                loginName: this.loginName,
+                password: this.password
+              },
+              res => {
+                this.loginloading = false
+                //登录成功
+                console.log(res)
+                if (res.return_code == 200 && res.return_obc) {
+                  this.showMsg(res.return_msg, false)
+                  const obc = res.return_obc
+                  setCookie('authorization', obc['authorization'], 100)
+                  setCookie('username', obc['username'], 100)
+                  setTimeout(() => {
+                    window.location.href = '/page/home'
+                  }, 1500)
+                } else {
+                  this.showMsg(res.return_msg)
+                }
+              }
+            )
+          },
+          showMsg: function(msg = '', error = true, time = 2500) {
+            this.msgShow = true
+            this.msgError = error
+            this.message = msg
+            setTimeout(() => {
+              this.msgShow = false
+              this.msgError = false
+            }, time)
+          }
+        }
+      })
     </script>
-</body>
-
+  </body>
 </html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+  <title>HOME</title>
+  <script src="../public/jquery-3.4.1.js"></script>
+  <script src="../public/vue.js"></script>
+  <script src="../public/moment.min.js"></script>
+  <script src="../public/snowflakes.min.js"></script>
+  <link rel="stylesheet" href="../public/css/style.css" />
+  <link rel="stylesheet" href="../public/css/iconfont.css" />
+  <link rel="stylesheet" href="../public/vue/vue-component.css" />
+  <script src="../public/common.js"></script>
+
+  <script src="../public/vue/vue-component.js"></script>
+
+  <style>
+    body {
+      background: #000;
+    }
+
+    div {
+      color: #fff;
+    }
+
+    .container {
+      position: absolute;
+      justify-content: space-around;
+      width: 96%;
+      margin: 0 2%;
+    }
+
+    img {
+      height: 100%;
+      width: 50%;
+    }
+
+    .headDiv {
+      height: 10%;
+      width: 100%;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    .headLeft {
+      width: 20%;
+    }
+
+    .headCenter {
+      width: 55%;
+    }
+
+    .headRight {
+      width: 20%;
+      overflow: hidden;
+    }
+
+    .headItem {
+      height: 100%;
+    }
+
+    .content {
+      justify-content: space-around;
+      height: 70%;
+      width: 100%;
+    }
+
+    .menuContent {
+      justify-content: space-around;
+      height: 100%;
+      width: 100%;
+    }
+
+    .contentList {
+      height: 40%;
+      width: 100%;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    .contentItem {
+      height: 9rem;
+      width: 9rem;
+      border-radius: 50%;
+    }
+
+    .footer {
+      height: 10%;
+      width: 100%;
+    }
+
+    #outButton {
+      height: 90%;
+      width: 95%;
+      background-color: transparent;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container flexCenter" id="app">
+    <div class="whiteBorder flexCenter headDiv">
+      <div class="headItem headLeft flexCenter">
+        <!-- <img src="../public/timg.gif" /> -->
+      </div>
+      <div class="headItem headCenter flexCenter">
+        <p class="mFont">{{ userName }}</p>
+      </div>
+      <div class="headItem headRight flexCenter">
+        <!-- <img src="../public/timg.gif" /> -->
+        <button id="outButton" class="sFont whiteBorder flexCenter" v-on:click="outClick">
+          {{openView === 'menu' ? 'OUT' : 'BACK'}}
+        </button>
+      </div>
+    </div>
+    <div class="whiteBorder content flexCenter">
+      <template v-if="openView === 'menu'">
+        <div class="flexCenter contentList">
+          <div class="whiteBorder flexCenter contentItem" v-on:click="menuClick('calendar')">
+            <div class="mFont">日历</div>
+          </div>
+          <div class="whiteBorder flexCenter contentItem">
+            <div class="mFont">记录</div>
+          </div>
+        </div>
+        <div class="flexCenter contentList">
+          <div class="whiteBorder flexCenter contentItem" v-on:click="menuClick('body')">
+            <div class="mFont">身体</div>
+          </div>
+          <div class="whiteBorder flexCenter contentItem">
+            <div class="mFont">饮食</div>
+          </div>
+        </div>
+      </template>
+      <template v-if="openView === 'calendar'">
+        <calendar />
+      </template>
+      <template v-if="openView === 'body'">
+        <div id="body_container" class="flexCenter">
+          <div id="body_timeDiv" class="flexCenter whiteBorder">
+            <div id="time_container" class="flexCenter ">
+              <div class="time_div flexCenter">
+                <input v-bind:style="checkTimeStyle(year,'year')" class="time_input flexCenter sFont" type="number"
+                  id="time_year" placeholder="YEAR" v-model="year" />
+                <p class="time_label ">YEAR</p>
+              </div>
+              <div class="time_segmented flexCenter">-</div>
+              <div class="time_div flexCenter">
+                <input v-bind:style="checkTimeStyle(month,'month')" class="time_input flexCenter sFont" type="number"
+                  id="time_month" placeholder="MONTH" v-model="month" />
+                <p class="time_label">MONTH</p>
+              </div>
+              <div class="time_segmented flexCenter ">-</div>
+              <div class="time_div flexCenter">
+                <input v-bind:style="checkTimeStyle(date,'date')" class="time_input flexCenter sFont" type="number"
+                  id="time_date" placeholder="DATE" v-model="date" />
+                <p class="time_label">DATE</p>
+              </div>
+              <div class="time_segmented flexCenter"></div>
+              <div class="time_div flexCenter">
+                <input v-bind:style="checkTimeStyle(hour,'hour')" v-model="hour" type="number"
+                  class="time_input flexCenter sFont" id="time_hour" placeholder="HOUR" />
+                <p class="time_label">HOUR</p>
+              </div>
+              <div class="time_segmented flexCenter">:</div>
+              <div class="time_div flexCenter">
+                <input v-bind:style="checkTimeStyle(minute,'minute')" v-model="minute" type="number"
+                  class="time_input flexCenter sFont" id="time_minute" placeholder="MINUTE" />
+                <p class="time_label">MINUTE</p>
+              </div>
+            </div>
+          </div>
+          <div id="body_weightDiv" class="flexCenter whiteBorder">
+            <div class="flexCenter sFont" id="weight_label">WEIGHT:</div>
+            <input v-bind:style="checkNumberStyle(weight)" v-model="weight" type="number"
+              class="flexCenter sFont whiteBorder" id="weight_input" placeholder="WEIGHT" />
+
+            <div class="flexCenter sFont whiteBorder" id="weight_unit" v-on:click="weightUnitClick">
+              {{unitList[weightUnitKey].title}}
+            </div>
+          </div>
+          <div id="body_remarkDiv" class="flexCenter whiteBorder">
+
+          </div>
+          <div id="body_operateDiv" class="flexCenter whiteBorder">
+
+          </div>
+        </div>
+      </template>
+      <selectdialog v-bind:data="unitList" v-bind:isshow="dialogShow" v-on:selectevent="weightUnitChange" />
+    </div>
+    <div class="whiteBorder flexCenter footer">
+      <div class="mFont" style="font-size: 1rem">
+        {{ message }}
+      </div>
+    </div>
+
+
+  </div>
+
+</body>
+<script>
+  const scale = 0.7
+  $(() => {
+    console.log('load')
+    // $.get('/auth/user', {}, (res) => {
+    //   //登录成功
+    //   console.log(res)
+    //   if (res.return_code == 200 && res.return_obc) {
+    //     app.userName = res.return_obc.userName
+    //   }
+    // })
+    console.log(app._data)
+    app.userName = getCookie('username')
+    htmlfontCompute()
+
+  })
+  $(window).resize(() => {
+    htmlfontCompute()
+  })
+  //菜单大小计算
+  var menuSizeCompute = () => {
+    let len =
+      Math.min(document.body.clientHeight * 0.65, document.body.clientWidth) *
+      scale
+    $('.contentItem')
+      .css('height', len / 2 + 'px')
+      .css('width', len / 2 + 'px')
+
+  }
+  const basesize = Number($('html').css('font-size').replace('px', ''))
+
+  function htmlfontCompute() {
+    let len = (document.body.clientHeight / 650) * basesize
+    $('html').css('font-size', len + 'px')
+  }
+  var sf = new Snowflakes({
+    color: '#ffffff',
+    count: 75,
+    minOpacity: 0.2,
+    maxOpacity: 0.6
+  })
+  var app = new Vue({
+    el: '#app',
+    data: {
+      userName: '',
+      message: 'message',
+      openView: 'body',
+
+      year: 0,
+      month: 0,
+      date: 0,
+      hour: 0,
+      minute: 0,
+      weight: 0,
+
+      dialogShow: false,
+      weightUnitKey: 0,
+      unitList: [{
+        key: 0,
+        title: 'kg',
+        ratio: 1000,
+      }, {
+        key: 1,
+        title: 'g',
+        ratio: 1,
+      }, {
+        key: 2,
+        title: '斤',
+        ratio: 500,
+      }, {
+        key: 3,
+        title: '公斤',
+        ratio: 1000,
+      }]
+    },
+    watch: {
+      // weight: function (val) {
+      //   if (/[^\d.]/.test(val)) {
+      //     this.weight = val.replace(/[^\d.]/, "")
+      //   }
+      // }
+    },
+    computed: {},
+    created: function () {
+      console.log('creat')
+      //body creat
+      const now = moment()
+      this.year = now.year()
+      this.month = now.month() + 1
+      this.date = now.date()
+      this.hour = now.hour()
+      this.minute = now.minute()
+    },
+    methods: {
+      checkNumberStyle: function (number) {
+        if (number === "" || /[^\d.]/.test(number)) {
+          return {
+            color: '#88001B'
+          }
+        }
+      },
+      checkTimeStyle: function (time, type) {
+        const numbercheck = this.checkNumberStyle(time)
+        if (numbercheck || numbercheck != undefined) {
+          return numbercheck
+        }
+        let pass = true
+        switch (type) {
+          case "year": {
+            pass = time >= 2000 && time <= 2100
+            break
+          }
+          case "month": {
+            pass = time >= 1 && time <= 12
+            break
+          }
+          case "date": {
+            pass = time >= 1 && time <= 31
+            break
+          }
+          case "hour": {
+            pass = time >= 0 && time <= 23
+            break
+          }
+          case "minute": {
+            pass = time >= 0 && time <= 60
+            break
+          }
+        }
+        if (!pass) {
+          return {
+            color: '#88001B'
+          }
+        }
+      },
+      weightUnitClick: function () {
+        c.log("weightUnitClick")
+        this.dialogShow = true
+      },
+      weightUnitChange: function (item) {
+        const weightUnit = this.unitList[this.weightUnitKey]
+        this.weight = this.weight * weightUnit.ratio / item.ratio
+        this.weightUnitKey = item.key
+        this.dialogShow = false
+      },
+
+      test: function (e) {
+        console.log("test", e)
+      },
+      outClick: function () {
+        switch (this.openView) {
+          default: {
+            this.openView = "menu"
+            break
+          }
+          case 'menu': {
+            this.loginOut()
+          }
+        }
+      },
+      loginOut: function () {
+        clearCookie("username")
+        clearCookie("authorization")
+        window.location.href = "/page/index"
+
+      },
+      menuClick: function (menuname) {
+        switch (menuname) {
+          default: {}
+          case 'calendar': {
+            this.openView = "calendar"
+            break
+          }
+          case 'body': {
+            this.openView = "body"
+            break
+          }
+        }
+      },
+    }
+  })
+</script>
+
+</html>

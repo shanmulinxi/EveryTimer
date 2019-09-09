@@ -1,0 +1,81 @@
+html {
+  font-size: 15px;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-size: 1rem;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+div,
+p {
+  font-family: 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', 'YouYuan';
+
+}
+
+p {
+  margin: 0;
+}
+
+input {
+  padding: 0;
+}
+
+.sFont {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.smFont {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.mFont {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.container {
+  height: 100%;
+  width: 100%;
+}
+
+.flexCenter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.whiteBorder {
+  border: #fff 0.2rem solid;
+  border-radius: 0.5rem;
+}
+
+.whiteSmBorder {
+  border: #fff 0.15rem solid;
+  border-radius: 0.4rem;
+}
+
+
+
+/* 去掉input[type="number"]的默认样式 */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+}
+
+/* chrome */
+input[type="number"] {
+  -moz-appearance: textfield;
+  /* firefox */
+
+}
