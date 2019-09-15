@@ -5,7 +5,7 @@ const ErrorCode = require('../common/errorcode')
 const ControlName = 'BodyCenter'
 const ControlIndex = 2
 /**
- * 登录控制器
+ * 控制器
  */
 module.exports = class BodyCenter extends Control {
   constructor(app) {
@@ -16,7 +16,6 @@ module.exports = class BodyCenter extends Control {
     super
       .checkHearder(req)
       .then(result => {
-        console.log(result)
         if (req.originalUrl.lastIndexOf('/insert') != -1) {
           //添加数据到body中
           req.body.user = {}
@@ -47,12 +46,13 @@ module.exports = class BodyCenter extends Control {
     const reqUser = req.body.user || null
     if (!reqData || !reqUser) {
       this.failReturn(res, ErrorCode.BodyCenter_Insert_NullReqData)
+      return
     }
     // 通过basebody类构建数据对象
     const base_body = new Base_Body(reqData)
-    const checkmsg = base_body.verifyBodyData()
-    if (checkmsg != true) {
-      this.failReturn(res, ErrorCode.BodyCenter_Insert_VerifyBodyData)
+
+    if (!base_body.verifyAllData()) {
+      this.failReturn(res, ErrorCode.BodyCenter_Insert_VerifyAllData)
       return
     }
     if (!base_body.setUserId(reqUser.id)) {

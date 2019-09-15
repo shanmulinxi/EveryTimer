@@ -1,11 +1,8 @@
 const Control = require('../class/Control')
-const Jwt = require('jsonwebtoken') //用来生成token
-
-const Mysql = require('../../mysql/index')
 const ControlName = 'Auth'
 const Moment = require('moment')
-
-const Crypto = require('crypto')
+const Base_User = require('../../model/Base_User')
+const ErrorCode = require('../common/errorcode')
 /**
  * 登录控制器
  */
@@ -15,193 +12,139 @@ module.exports = class Auth extends Control {
   }
 
   initIntercept(req, res, next) {
+
     //自定义拦截器
     next()
   }
   initRouter() {
     const _router = super.initRouter()
 
-    _router.get('/user', (req, res) => {
-      this.checkCookies(req)
-        .then(cookData => {
-          if (cookData === null) {
-            this.failReturn(res, {
-              return_msg: 'USER VERIFY ERROR',
-              return_code: 20000
-            })
-            return
-          }
-          console.log('cookData', cookData)
-          Mysql.run(
-            'SELECT ( userName ) FROM base_user WHERE id = ? AND loginName = ? LIMIT 0,2',
-            [cookData['id'], cookData['loginName']]
-          ).then(result => {
-            console.log(result)
-            if (result.length == 0) {
-              this.failReturn(res, {
-                return_msg: 'FIND NOT USER',
-                return_code: 10010
-              })
-              return
-            }
-            if (result.length >= 2) {
-              this.failReturn(res, {
-                return_msg: 'SEVER ERROR',
-                return_code: 10004
-              })
-              return
-            }
-            this.successReturn(res, {
-              return_obc: result[0]
-            })
-          })
-        })
-        .catch(err => {
-          this.failReturn(res, {
-            return_msg: 'USER VERIFY ERROR',
-            return_obc: err,
-            return_code: 20001
-          })
-          return
-        })
-    })
     _router.post('/signIn', (req, res) => {
-      console.log(req.cookies)
-      const bodyloginName = req.body.loginName
-      const bodypassword = req.body.password
-      //登录名称初步验证
-      if (bodyloginName == undefined || bodyloginName.length == 0) {
-        this.failReturn(res, {
-          return_msg: 'LOGINNAME ERROR',
-          return_code: 10001
-        })
-        return
-      }
-      //密码初步验证
-      if (bodypassword == undefined || bodypassword.length == 0) {
-        this.failReturn(res, {
-          return_msg: 'PASSWORD ERROR',
-          return_code: 10002
-        })
-        return
-      }
-
-      Mysql.run('SELECT * FROM base_user WHERE loginName = ? LIMIT 0,2', [
-        bodyloginName
-      ])
-        .then(result => {
-          console.log(result)
-          if (result.length == 0) {
-            this.failReturn(res, {
-              return_msg: 'LOGINNAME ERROR',
-              return_code: 10003
-            })
-            return
-          }
-          if (result.length >= 2) {
-            this.failReturn(res, {
-              return_msg: 'SEVER ERROR',
-              return_code: 10004
-            })
-            return
-          }
-          const userdata = result[0]
-          const postpassword = this.creatMD5(bodypassword).toUpperCase()
-          // console.log(postpassword)
-          const nowString = Moment().format('YYYY-MM-DD hh:mm:ss')
-          if (userdata['password'].toUpperCase() === postpassword) {
-            let tokenContent = {
-              id: userdata['id'],
-              loginName: userdata['loginName'],
-              loginTime: nowString
-            } // 要生成token的主题信息
-            let secretOrPrivateKey = global.config.TokenKey // 这是加密的key（密钥）
-            let token = Jwt.sign(tokenContent, secretOrPrivateKey, {
-              expiresIn: 60 * 60 * 24 * 1 // 24小时过期
-            })
-            const sql =
-              'UPDATE base_user SET authorization = ? , loginTime = ? , loginError = ? WHERE id = ?'
-            Mysql.run(sql, [token, nowString, 0, userdata['id']])
-            this.successReturn(res, {
-              return_obc: {
-                authorization: token,
-                username: userdata['userName']
-              }
-            })
-            return
-          } else {
-            const sql =
-              'UPDATE base_user SET loginTime = ? , loginError = ? WHERE id = ?'
-            Mysql.run(sql, [
-              nowString,
-              userdata['loginError'] + 1,
-              userdata['id']
-            ])
-            this.failReturn(res, {
-              return_msg: 'PASSWORD ERROR',
-              return_code: 10005
-            })
-            return
-          }
-        })
-        .catch(error => {
-          this.failReturn(res, {
-            return_code: 10006,
-            return_obc: error
-          })
-        })
-
-      // // res.json({status:1,mess:'ok',Authorization:token,userName:req.body.userName})
-      // res.json({
-      //     status: 1,
-      //     mess: 'ok'
-      // })
+      this.signInForPassword(req, res)
     })
-
     _router.post('/signUp', (req, res) => {
-      console.log(req.body.user)
-      const data = req.body.user
-      if (!this.verification(data)) {
-        this.failReturn(res, {}, 'user verification fail')
-        return
-      }
-      const insertUser = {
-        id: 0,
-        loginName: data.loginName,
-        userName: data.userName,
-        password: this.creatSHA256(data.password),
-        creatTime: Moment().format('YYYY-MM-DD hh:mm:ss'),
-        editTime: Moment().format('YYYY-MM-DD hh:mm:ss'),
-        isDelete: false
-      }
-      Mysql.insertData('base_user', insertUser)
-        .then(result => {
-          this.successReturn(res, result.result)
-        })
-        .catch(result => {
-          this.failReturn(res, result.err)
-        })
+      this.signUpForPassword(req, res)
     })
-
     return _router
   }
 
-  verification(user) {
-    if (user === undefined) return false
-    if (user.userName === undefined) return false
-    if (user.loginName === undefined) return false
-    return true
-  }
-  creatMD5(word) {
-    return Crypto.createHash('MD5')
-      .update(word)
-      .digest('hex')
-  }
-  creatSHA256(word) {
-    return Crypto.createHash('SHA256')
-      .update(word)
-      .digest('hex')
-  }
-}
+  /**密码登录 */
+  signInForPassword(req, res) {
+    const reqData = req.body.data || null
+    if (!reqData) {
+      this.failReturn(res, ErrorCode.Auth_SignIn_NullReqData)
+      return
+    }
+    // 通过baseuser类构建对象
+    const base_user = new Base_User(reqData)
+    //获取数据
+    const operateData = base_user.getData()
+    // 登录body校验
+    if (!Base_User.verifyAllData(operateData)) {
+      this.failReturn(res, ErrorCode.Auth_SignIn_VerifyAllData)
+      return
+    }
 
-// exports.load = load;
+
+    Base_User.getDataFormLoginName(operateData.loginName, 2).then(loginsearch => {
+      if (loginsearch.length == 0) {
+        this.failReturn(res, ErrorCode.Auth_SignIn_NoSearchUser)
+        return
+      } else if (loginsearch.length >= 2) {
+        this.failReturn(res, ErrorCode.Auth_SignIn_OneMoreUser)
+        return
+      }
+      //找到唯一用户
+      const userdata = loginsearch[0]
+
+      // TODO 依照获取的用户信息，判断登录错误次数，达到一定次数，暂时停止登录尝试
+      console.log(loginsearch)
+      // 用户密码校验
+      if (!base_user.checkWithPassword(userdata.password)) {
+        Base_User.loginPassError(userdata)
+        this.failReturn(res, ErrorCode.Auth_SignIn_PasswordError)
+        return
+      } else {
+        // 生成token
+        userdata['authorization'] = Base_User.createToken(userdata)
+        //清空登录错误
+        userdata['loginError'] = 0
+        userdata['loginTime'] = Moment().format('YYYY-MM-DD hh:mm:ss')
+        //所有校验完成，返回结果
+        Base_User.updateUser(userdata, ['authorization', 'loginTime', 'loginError']).then(updateR => {
+          console.log(updateR)
+          this.successReturn(res, {
+            return_obc: {
+              authorization: userdata['authorization'],
+              username: userdata['userName']
+            }
+          })
+          return
+        }).catch(err => {
+          this.failReturn(res, ErrorCode.Auth_SignIn_UpdateSQLError)
+          return
+        })
+      }
+
+    }).catch(err => {
+      console.log(err)
+      this.failReturn(res, ErrorCode.Auth_SignIn_SearchLoginName)
+      return
+    })
+
+
+  }
+  /**
+   *密码注册
+   *
+   * @param {*} req
+   * @param {*} res
+   * { data : {...Base_User.operateData}}
+   */
+  signUpForPassword(req, res) {
+    const reqData = req.body.data || null
+    if (!reqData) {
+      this.failReturn(res, ErrorCode.Auth_SignUp_NullReqData)
+      return
+    }
+    // 通过baseuser类构建对象
+    const base_user = new Base_User(reqData)
+    //获取数据
+    const operateData = base_user.getData()
+    if (!Base_User.verifyAllData(operateData)) {
+      this.failReturn(res, ErrorCode.Auth_SignUp_VerifyAllData)
+      return
+    }
+    // 检查用户唯一性
+    Base_User.getDataFormLoginName(operateData.loginName, 1).then(
+      searchR => {
+        if (searchR && searchR.length > 0) {
+          //查找到用户名不唯一
+          this.failReturn(res, ErrorCode.Auth_SignUp_LoginNameNoOnly)
+          return
+        } else {
+          Base_User.insertData(operateData)
+            .then(result => {
+              console.log(result)
+              this.successReturn(res, {})
+              return
+            })
+            .catch(result => {
+              console.log(err)
+              this.failReturn(res, ErrorCode.Auth_SignUp_InsertSQL)
+              return
+            })
+        }
+
+      }
+    ).catch(err => {
+      this.failReturn(res, ErrorCode.Auth_SignUp_SearchLoginName)
+      return
+    })
+
+
+  }
+
+
+
+}

@@ -58,8 +58,8 @@ module.exports = class Base_Body {
     const insertDataValues = Object.values(basebodyData)
 
     const sqlcommand = `INSERT INTO base_body ( ${insertDataKeys.join(
-      ','
-    )} ) VALUES ( ${placeholder.join(',')} )`
+      ' , '
+    )} ) VALUES ( ${placeholder.join(' , ')} )`
 
     console.log(sqlcommand)
     return Mysql.run(sqlcommand, insertDataValues)
@@ -68,8 +68,8 @@ module.exports = class Base_Body {
   /**
    * 数据正确性验证
    */
-  verifyBodyData() {
-    const number = /[^0-9]/
+  verifyAllData() {
+    const t_Patt_Number = /[^0-9]/
     const obc = this.data
     for (let key in obc) {
       switch (key) {
@@ -83,7 +83,7 @@ module.exports = class Base_Body {
         case 'proteinPercent':
         case 'bmi':
         case 'weight': {
-          if (number.test(obc[key])) {
+          if (t_Patt_Number.test(obc[key])) {
             return false
           }
           break
