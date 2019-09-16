@@ -69,7 +69,7 @@ module.exports = class Auth extends Control {
         userdata['authorization'] = Base_User.createToken(userdata)
         //清空登录错误
         userdata['loginError'] = 0
-        userdata['loginTime'] = Moment().format('YYYY-MM-DD hh:mm:ss')
+        userdata['loginTime'] = Moment().format('YYYY-MM-DD HH:mm:ss')
         //所有校验完成，返回结果
         Base_User.updateUser(userdata, ['authorization', 'loginTime', 'loginError']).then(updateR => {
           console.log(updateR)

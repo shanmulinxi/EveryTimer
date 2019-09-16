@@ -49,7 +49,7 @@ module.exports = class Control {
       return_msg = 'FAILURE',
       return_state = false,
       return_code = 500
-    }
+    },message
   ) {
     console.log("failReturn", {
       return_state,
@@ -60,7 +60,7 @@ module.exports = class Control {
     res.json({
       return_state,
       return_code,
-      return_msg,
+      return_msg : message || return_msg,
       return_obc
     })
   }

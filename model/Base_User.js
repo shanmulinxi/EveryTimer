@@ -32,7 +32,7 @@ module.exports = class Base_User {
    * @param {*} operateData 可操作数据原型
    */
   static insertData(operateData) {
-    const nowtime = Moment().format('YYYY-MM-DD hh:mm:ss')
+    const nowtime = Moment().format('YYYY-MM-DD HH:mm:ss')
     const baseuserData = {
       id: 0,
       creatTime: nowtime,
@@ -136,7 +136,7 @@ module.exports = class Base_User {
    * @param {*} user
    */
   static createToken(user) {
-    const nowString = Moment().format('YYYY-MM-DD hh:mm:ss')
+    const nowString = Moment().format('YYYY-MM-DD HH:mm:ss')
     let tokenContent = {
       id: user['id'],
       loginName: user['loginName'],
@@ -153,7 +153,7 @@ module.exports = class Base_User {
    *
    */
   static loginPassError(user) {
-    const loginTime = Moment().format('YYYY-MM-DD hh:mm:ss')
+    const loginTime = Moment().format('YYYY-MM-DD HH:mm:ss')
     const loginError = user.loginError + 1
     const userid = user.id
     const sqlcommand = `UPDATE base_user SET loginTime = ? , loginError = ? WHERE id = ?`

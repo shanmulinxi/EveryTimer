@@ -15,6 +15,58 @@ module.exports = {
     return_code: 30003,
     return_msg: '添加数据失败'
   },
+  BodyCenter_Delete_NullReqData: {
+    return_code: 30004,
+    return_msg: '没有请求数据'
+  },
+  BodyCenter_DeleteBody_NoSearchBody:{
+     return_code: 30005,
+    return_msg: '单据不存在'
+  },
+  BodyCenter_DeleteBody_ServerError:{
+    return_code: 30006,
+    return_msg: '服务器错误'
+  },
+  BodyCenter_DeleteBody_HaveBeenDelete:{
+     return_code: 30007,
+    return_msg: '单据不存在'
+  },
+  BodyCenter_DeleteBody_NoAuthority:{
+    return_code: 30008,
+    return_msg: '无权限'
+  },
+  BodyCenter_DeleteBody_SQLERROR:{
+    return_code: 30009,
+    return_msg: '数据库错误'
+  },
+  BodyCenter_UpdateBody_NoSearchBody:{
+     return_code: 30010,
+    return_msg: '单据不存在'
+  },
+  BodyCenter_UpdateBody_ServerError:{
+    return_code: 30011,
+    return_msg: '服务器错误'
+  },
+  BodyCenter_UpdateBody_HaveBeenDelete:{
+     return_code: 30012,
+    return_msg: '单据不存在'
+  },
+  BodyCenter_UpdateBody_NoAuthority:{
+    return_code: 30013,
+    return_msg: '无权限'
+  },
+  BodyCenter_UpdateBody_SQLERROR:{
+    return_code: 30014,
+    return_msg: '数据库错误'
+  },
+  BodyCenter_UpdateBody_VerifyAllData:{
+    return_code: 30015,
+    return_msg: '数据校验失败'
+  },
+  BodyCenter_SearchBody_NullReqData: {
+    return_code: 30016,
+    return_msg: '没有请求数据'
+  },
   Auth_SignUp_NullReqData: {
     return_code: 20000,
     return_msg: '没有请求数据'
