@@ -1,8 +1,9 @@
 const Mysql = require('../mysql/index')
 const Moment = require('moment')
-
-module.exports = class Base_Body {
+const Base = require('./Base')
+module.exports = class Base_Body extends Base {
   constructor(obcdata) {
+    super(obcdata)
     const operateDataKeys = Object.keys(Base_Body.getOperate())
     operateDataKeys.map(key => {
       if (obcdata[key] != undefined) {
@@ -13,7 +14,7 @@ module.exports = class Base_Body {
     this.data = operateData
   }
 
-  static getOperate(){
+  static getOperate() {
     return {
       weight: null,
       bmi: null,
@@ -49,8 +50,7 @@ module.exports = class Base_Body {
    * @returns
    */
   static getDataFormId(id) {
-   
-    const sqlcommand = `SELECT * FROM base_body WHERE id = ?` 
+    const sqlcommand = `SELECT * FROM base_body WHERE id = ?`
     return Mysql.run(sqlcommand, [id])
   }
 
@@ -61,16 +61,17 @@ module.exports = class Base_Body {
    * @param {number} [size=0]
    * @returns
    */
-  static getDataFormFilter(filter , page = null , pagesize = null) {
-    let extercommand = ""
+  static getDataFormFilter(filter, page = null, pagesize = null) {
+    let limitcommand = ''
     if (page != null && pagesize != null) {
-      extercommand += ` LIMIT ${page*pagesize},${pagesize}` 
+      limitcommand += ` LIMIT ${page * pagesize},${pagesize}`
     }
-    const sqlcommand = `SELECT * FROM base_body WHERE id = ?` + extercommand
-    return Mysql.run(sqlcommand, [id])
+    const sqlcommand =
+      `SELECT * FROM base_body WHERE userid = ? ` + limitcommand
+    return Mysql.run(sqlcommand, [userid])
   }
 
- /**
+  /**
    *更新body信息
    *
    * @static
@@ -91,11 +92,11 @@ module.exports = class Base_Body {
     }
     updatelist.push(id)
 
-
-    const sqlcommand = `UPDATE base_body SET ${extercommand.join(',')}WHERE id = ?`
+    const sqlcommand = `UPDATE base_body SET ${extercommand.join(
+      ','
+    )}WHERE id = ?`
     console.log(sqlcommand, updatelist)
     return Mysql.run(sqlcommand, updatelist)
-
   }
   /**
    * 数据插入
@@ -129,58 +130,49 @@ module.exports = class Base_Body {
   static verifyAllData(obc) {
     const t_Patt_Number = /[^0-9]/
 
-    console.log("verifyAllData",obc)
+    console.log('verifyAllData', obc)
     for (let key in obc) {
       switch (key) {
-        case 'weight':
-        {
-          if(obc[key]==null)continue
+        case 'weight': {
+          if (obc[key] == null) continue
           if (t_Patt_Number.test(obc[key])) {
-            return "体重只能输入数字哟(｡･ω･｡)"
-          }
-          else if (Number(obc[key])>200000||Number(obc[key])<20000 ) {
-            return "体重感觉不对哦~检查看看吧❥(^_-)"
+            return '体重只能输入数字哟(｡･ω･｡)'
+          } else if (Number(obc[key]) > 200000 || Number(obc[key]) < 20000) {
+            return '体重感觉不对哦~检查看看吧❥(^_-)'
           }
           break
         }
-        case 'bodytype':
-        {
-          if(obc[key]==null)continue
+        case 'bodytype': {
+          if (obc[key] == null) continue
           if (t_Patt_Number.test(obc[key])) {
-            return "体型数据格式竟然格式出错了!?"
-          }
-          else if (Number(obc[key])>=9||Number(obc[key])<0 ) {
-            return "体型数据出错了!?"
+            return '体型数据格式竟然格式出错了!?'
+          } else if (Number(obc[key]) >= 9 || Number(obc[key]) < 0) {
+            return '体型数据出错了!?'
           }
           break
         }
-        case 'muscle':
-        {
-          if(obc[key]==null)continue
+        case 'muscle': {
+          if (obc[key] == null) continue
           if (t_Patt_Number.test(obc[key])) {
-            return "肌肉量只能输入数字哟(｡･ω･｡)"
-          }
-          else if (Number(obc[key])>200000||Number(obc[key])<20000 ) {
-            return "肌肉量感觉不对哦~检查看看吧❥(^_-)"
+            return '肌肉量只能输入数字哟(｡･ω･｡)'
+          } else if (Number(obc[key]) > 200000 || Number(obc[key]) < 20000) {
+            return '肌肉量感觉不对哦~检查看看吧❥(^_-)'
           }
           break
         }
-        case 'bone':
-        {
-          if(obc[key]==null)continue
+        case 'bone': {
+          if (obc[key] == null) continue
           if (t_Patt_Number.test(obc[key])) {
-            return "骨质量只能输入数字哟(｡･ω･｡)"
-          }
-          else if (Number(obc[key])>200000||Number(obc[key])<20000 ) {
-            return "骨质量感觉不对哦~检查看看吧❥(^_-)"
+            return '骨质量只能输入数字哟(｡･ω･｡)'
+          } else if (Number(obc[key]) > 200000 || Number(obc[key]) < 20000) {
+            return '骨质量感觉不对哦~检查看看吧❥(^_-)'
           }
           break
         }
-        case 'baseMetabolism':
-        {
-          if(obc[key]==null)continue
+        case 'baseMetabolism': {
+          if (obc[key] == null) continue
           if (t_Patt_Number.test(obc[key])) {
-            return "基础代谢只能输入数字哟(｡･ω･｡)"
+            return '基础代谢只能输入数字哟(｡･ω･｡)'
           }
           break
         }
@@ -188,9 +180,8 @@ module.exports = class Base_Body {
         case 'fatPercent':
         case 'waterPercent':
         case 'proteinPercent':
-        case 'bmi':
-         {
-          if (obc[key]!=null&&t_Patt_Number.test(obc[key])) {
+        case 'bmi': {
+          if (obc[key] != null && t_Patt_Number.test(obc[key])) {
             return false
           }
           break
