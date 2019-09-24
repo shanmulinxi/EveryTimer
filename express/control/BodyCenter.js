@@ -2,6 +2,7 @@ const Moment = require('moment')
 const Control = require('../class/Control')
 
 const Base_Body = require('../../model/Base_Body')
+const Base_User = require('../../model/Base_User')
 const ErrorCode = require('../common/errorcode')
 
 const ControlName = 'BodyCenter'
@@ -235,67 +236,54 @@ module.exports = class BodyCenter extends Control {
       )
       return
     }
-    Base_Body.test()
-    res.send('test')
-    return
-    //获取数据
-    Base_Body.getDataFormId(reqUser['id'])
-      .then(searchR => {
-        if (searchR.length == 0) {
-          this.failReturn(res, ErrorCode.BodyCenter_UpdateBody_NoSearchBody)
-          return
-        } else if (searchR.length >= 2) {
-          this.failReturn(res, ErrorCode.BodyCenter_UpdateBody_ServerError)
-          return
-        }
 
-        // 找到唯一可操作数据
-        const operateData = searchR[0]
-
-        if (operateData['isDelete']) {
-          this.failReturn(res, ErrorCode.BodyCenter_UpdateBody_HaveBeenDelete)
-          return
-        } else if (Number(operateData['userid']) != Number(reqUser.id)) {
-          // 非添加人员 禁止修改 // TODO 可能增加权限控制
-          this.failReturn(res, ErrorCode.BodyCenter_UpdateBody_NoAuthority)
-          return
-        }
-        // 可操作KeyList
-        const operateKeyList = Object.keys(Base_Body.getOperate())
-        // 提交数据KeyList
-        const dataKeyList = Object.keys(reqData)
-        // 修改数据KeyList
-        const sqlList = []
-        for (let key of dataKeyList) {
-          if (operateKeyList.includes(key)) {
-            sqlList.push(key)
-            operateData[key] = reqData[key]
+    const { capule, filter } = reqData
+    let searchUserId = reqUser['id']
+    Base_User.getDataFormId(reqUser['id'])
+      .then(userR => {
+        if (capule === true) {
+          searchUserId = userR[0]['capuleid']
+          if (searchUserId === null) {
+            this.failReturn(res, ErrorCode.BodyCenter_SearchBody_NoCapule)
+            return
           }
         }
-        // 数据正确性验证
-        const verifymsg = Base_Body.verifyAllData(operateData, sqlList)
-        if (verifymsg != true) {
-          this.failReturn(
-            res,
-            ErrorCode.BodyCenter_UpdateBody_VerifyAllData,
-            verifymsg
-          )
-          return
+
+        // 设置userid  只有本人或联结对象
+        const useridlist = filter
+          .filter(t => t.field == 'userid')
+          .map(it => {
+            it.operate = 'equal'
+            it.value = searchUserId
+          })
+        if (useridlist.length == 0) {
+          filter.push({
+            field: 'userid',
+            operate: 'equal',
+            value: searchUserId
+          })
         }
-        // 调整修改时间
-        operateData['editTime'] = Moment().format('YYYY-MM-DD HH:mm:ss')
-        Base_Body.updateBody(operateData, [...sqlList, 'editTime'])
-          .then(result => {
-            this.successReturn(res, {})
+        // 设置isDelete 默认获取未删除的
+        const deletelist = filter
+          .filter(t => t.field == 'isDelete')
+          .map(it => {
+            it.operate = 'equal'
+            it.value = false
           })
-          .catch(err => {
-            console.log(err)
-            this.failReturn(res, ErrorCode.BodyCenter_UpdateBody_SQLERROR)
-          })
+        if (deletelist.length == 0) {
+          filter.push({ field: 'isDelete', operate: 'equal', value: false })
+        }
+
+        Base_Body.getDataFormFilter(filter).then(result => {
+          this.successReturn(res, { return_obc: result })
+          return
+        })
       })
       .catch(err => {
         console.log(err)
-        this.failReturn(res, ErrorCode.BodyCenter_UpdateBody_SQLERROR)
+        this.failReturn(res, ErrorCode.BodyCenter_SearchBody_SQLERROR)
+        return
       })
+    return
   }
 }

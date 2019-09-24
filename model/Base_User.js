@@ -1,15 +1,20 @@
 const Mysql = require('../mysql/index')
 const Moment = require('moment')
+const Base = require('./Base')
 const Crypto = require('crypto')
 const Jwt = require('jsonwebtoken') //用来生成token
-module.exports = class Base_User {
+module.exports = class Base_User extends Base {
+  static getTabel() {
+    return 'base_user'
+  }
+
   constructor(obcdata) {
     const operateData = {
-      loginName: "",
-      userName: "",
-      password: "",
+      loginName: '',
+      userName: '',
+      password: '',
       message: null,
-      remark: null,
+      remark: null
     }
     const operateDataKeys = Object.keys(operateData)
     operateDataKeys.map(key => {
@@ -25,8 +30,6 @@ module.exports = class Base_User {
     return this.data
   }
 
-
-
   /**
    * 数据插入
    * @param {*} operateData 可操作数据原型
@@ -41,7 +44,7 @@ module.exports = class Base_User {
       loginTime: null,
       loginError: 0,
       authorization: null,
-      capuleid: null,
+      capuleid: null
     }
     Object.assign(baseuserData, operateData)
 
@@ -49,7 +52,6 @@ module.exports = class Base_User {
     const password = Base_User.passwordAddSalt(baseuserData.password)
 
     baseuserData.password = Base_User.creatMD5(password)
-
 
     const insertDataKeys = Object.keys(baseuserData)
     const placeholder = new Array(insertDataKeys.length).fill('?')
@@ -71,11 +73,12 @@ module.exports = class Base_User {
    * @returns
    */
   static getDataFormLoginName(loginName, size = 0) {
-    let extercommand = ""
+    let extercommand = ''
     if (size > 0) {
-      extercommand += " LIMIT " + size
+      extercommand += ' LIMIT ' + size
     }
-    const sqlcommand = `SELECT * FROM base_user WHERE loginName = ?` + extercommand
+    const sqlcommand =
+      `SELECT * FROM base_user WHERE loginName = ?` + extercommand
     return Mysql.run(sqlcommand, [loginName])
   }
 
@@ -89,10 +92,12 @@ module.exports = class Base_User {
       switch (key) {
         case 'password':
         case 'loginName': {
-          if (!obc[key] ||
+          if (
+            !obc[key] ||
             obc[key].length < 4 ||
             obc[key].length > 20 ||
-            t_Patt_LoginName.test(obc[key])) {
+            t_Patt_LoginName.test(obc[key])
+          ) {
             return false
           }
         }
@@ -122,11 +127,11 @@ module.exports = class Base_User {
     }
     updatelist.push(id)
 
-
-    const sqlcommand = `UPDATE base_user SET ${extercommand.join(',')}WHERE id = ?`
+    const sqlcommand = `UPDATE base_user SET ${extercommand.join(
+      ','
+    )}WHERE id = ?`
     console.log(sqlcommand, updatelist)
     return Mysql.run(sqlcommand, updatelist)
-
   }
 
   /**
@@ -194,6 +199,4 @@ module.exports = class Base_User {
       .digest('hex')
       .toUpperCase()
   }
-
-
 }

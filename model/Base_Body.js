@@ -1,7 +1,12 @@
 const Mysql = require('../mysql/index')
 const Moment = require('moment')
 const Base = require('./Base')
+const Util = require('../tool/util')
 module.exports = class Base_Body extends Base {
+  static getTabel() {
+    return 'base_body'
+  }
+
   constructor(obcdata) {
     super(obcdata)
     const operateDataKeys = Object.keys(Base_Body.getOperate())
@@ -43,18 +48,6 @@ module.exports = class Base_Body extends Base {
   }
 
   /**
-   *根据id获取数据
-   *
-   * @param {*} id
-   * @param {number} [size=0]
-   * @returns
-   */
-  static getDataFormId(id) {
-    const sqlcommand = `SELECT * FROM base_body WHERE id = ?`
-    return Mysql.run(sqlcommand, [id])
-  }
-
-  /**
    *根据条件获取数据
    *
    * @param {*} id
@@ -66,9 +59,12 @@ module.exports = class Base_Body extends Base {
     if (page != null && pagesize != null) {
       limitcommand += ` LIMIT ${page * pagesize},${pagesize}`
     }
+    const sqlfilter = Util.creatFilter(filter)
     const sqlcommand =
-      `SELECT * FROM base_body WHERE userid = ? ` + limitcommand
-    return Mysql.run(sqlcommand, [userid])
+      `SELECT * FROM base_body ` + sqlfilter.command + limitcommand
+
+    console.warn(sqlcommand, sqlfilter.param)
+    return Mysql.run(sqlcommand, sqlfilter.param)
   }
 
   /**

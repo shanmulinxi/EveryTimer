@@ -1,7 +1,7 @@
-const creatFilter = obc => {
+const creatFilter = filter => {
   let wheresql = []
-  const { filter } = obc
-
+  let command = ''
+  let param = []
   for (let item of filter) {
     if (wheresql.length > 0) {
       wheresql.push('AND')
@@ -9,18 +9,24 @@ const creatFilter = obc => {
     wheresql.push(item.field)
     wheresql.push(sqlOperate[item.operate])
     if (sqlOperate[item.operate] != 'BETWEEN') {
-      wheresql.push(item.value)
+      wheresql.push('?')
+      param.push(item.value)
     } else {
-      wheresql.push(item.value)
-      wheresql.push(item.extra)
+      wheresql.push('?')
+      param.push(item.value)
+      wheresql.push('AND')
+      wheresql.push('?')
+      param.push(item.extra)
     }
   }
   if (wheresql.length == 0) {
     return ''
   } else {
     wheresql.unshift('WHERE')
-    return wheresql.join(' ')
+    command = wheresql.join(' ')
   }
+
+  return { command, param }
 }
 
 const sqlOperate = {
@@ -32,7 +38,9 @@ const sqlOperate = {
   less: '<',
   lessequal: '<=',
   between: 'BETWEEN',
-  like: 'LIKE'
+  like: 'LIKE',
+  isnull: 'IS NULL',
+  isnotnull: 'IS NOT NULL'
 }
 
 module.exports = {
