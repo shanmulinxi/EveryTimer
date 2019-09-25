@@ -1,12 +1,12 @@
 const express = require('express')
-const router = express.Router()
+// const router = express.Router()
 const Jwt = require('jsonwebtoken') //用来生成token
 /**
  * 自定义 http控制器
  */
 module.exports = class Control {
   constructor(controlName = '', app) {
-    const route = this.initRouter()
+    const route = this.initRouter(controlName)
     app.use('/' + controlName, this.initIntercept, route)
     // app.use(this.logErrors)
     // app.use(this.clientErrorHandler)
@@ -28,7 +28,7 @@ module.exports = class Control {
    * 初始化路由
    */
   initRouter() {
-    const _router = router
+    const _router = express.Router()
     return _router
   }
 
@@ -44,14 +44,16 @@ module.exports = class Control {
    *     }
    */
   failReturn(
-    res, {
+    res,
+    {
       return_obc = {},
       return_msg = 'FAILURE',
       return_state = false,
       return_code = 500
-    },message
+    },
+    message
   ) {
-    console.log("failReturn", {
+    console.log('failReturn', {
       return_state,
       return_code,
       return_msg,
@@ -60,7 +62,7 @@ module.exports = class Control {
     res.json({
       return_state,
       return_code,
-      return_msg : message || return_msg,
+      return_msg: message || return_msg,
       return_obc
     })
   }
@@ -76,14 +78,15 @@ module.exports = class Control {
    *     }
    */
   successReturn(
-    res, {
+    res,
+    {
       return_obc = {},
       return_msg = 'SUCCESS',
       return_state = true,
       return_code = 200
     }
   ) {
-    console.log("successReturn", {
+    console.log('successReturn', {
       return_state,
       return_code,
       return_msg,
@@ -109,7 +112,7 @@ module.exports = class Control {
 
   static verifyToken(token) {
     let secretOrPrivateKey = global.config.TokenKey // 这是加密的key（密钥）
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       Jwt.verify(token, secretOrPrivateKey, (err, decode) => {
         if (err) {
           //  时间失效的时候 || 伪造的token

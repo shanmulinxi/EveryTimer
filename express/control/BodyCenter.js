@@ -108,7 +108,6 @@ module.exports = class BodyCenter extends Control {
       )
       return
     }
-
     //获取数据
     Base_Body.getDataFormId(reqData['id'])
       .then(searchR => {

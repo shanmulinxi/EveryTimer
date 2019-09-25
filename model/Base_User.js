@@ -7,15 +7,49 @@ module.exports = class Base_User extends Base {
   static getTabel() {
     return 'base_user'
   }
-
-  constructor(obcdata) {
-    const operateData = {
+  //获取操作模型
+  static getOperateModel() {
+    return {
       loginName: '',
       userName: '',
       password: '',
       message: null,
-      remark: null
+      remark: null,
+      stamp: null,
+      sign: null,
+      smallName: null,
+      birthday: null
     }
+  }
+  //获取基础模型
+  static getBaseModel() {
+    const nowtime = Moment().format('YYYY-MM-DD HH:mm:ss')
+
+    return {
+      id: 0,
+      loginName: '',
+      userName: '',
+      password: '',
+      message: null,
+      remark: null,
+      creatTime: nowtime,
+      editTime: nowtime,
+      isDelete: false,
+      loginTime: null,
+      loginError: 0,
+      authorization: null,
+      capuleid: null,
+      stamp: null,
+      sign: null,
+      smallName: null,
+      birthday: null
+    }
+  }
+
+  //TODO 增加名称缩写加诞辰
+  constructor(obcdata) {
+    super(obcdata)
+    const operateData = Base_User.getOperateModel()
     const operateDataKeys = Object.keys(operateData)
     operateDataKeys.map(key => {
       if (obcdata[key] != undefined) {
@@ -35,17 +69,7 @@ module.exports = class Base_User extends Base {
    * @param {*} operateData 可操作数据原型
    */
   static insertData(operateData) {
-    const nowtime = Moment().format('YYYY-MM-DD HH:mm:ss')
-    const baseuserData = {
-      id: 0,
-      creatTime: nowtime,
-      editTime: nowtime,
-      isDelete: false,
-      loginTime: null,
-      loginError: 0,
-      authorization: null,
-      capuleid: null
-    }
+    const baseuserData = Base_User.getBaseModel()
     Object.assign(baseuserData, operateData)
 
     //对密码进行加盐加密
@@ -192,6 +216,7 @@ module.exports = class Base_User extends Base {
       .digest('hex')
       .toUpperCase()
   }
+
   /**密码sha256加密 */
   static creatSHA256(word) {
     return Crypto.createHash('SHA256')

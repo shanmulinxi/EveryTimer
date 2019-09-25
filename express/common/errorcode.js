@@ -95,6 +95,7 @@ module.exports = {
     return_code: 20004,
     return_msg: '查询失败'
   },
+
   Auth_SignIn_NullReqData: {
     return_code: 20005,
     return_msg: '没有请求数据'
@@ -122,5 +123,9 @@ module.exports = {
   Auth_SignIn_UpdateSQLError: {
     return_code: 20011,
     return_msg: '更新错误'
+  },
+  Auth_SignInForNameBirth_NullReqData: {
+    return_code: 20012,
+    return_msg: '没有请求数据'
   }
 }
