@@ -1,6 +1,7 @@
 const express = require('express')
 // const router = express.Router()
 const Jwt = require('jsonwebtoken') //用来生成token
+const Base_User = require('../../model/Base_User')
 /**
  * 自定义 http控制器
  */
@@ -119,8 +120,32 @@ module.exports = class Control {
           console.log(err)
           reject(err)
         } else {
-          console.log(decode)
-          resolve(decode)
+          const filter = [
+            { field: 'id', operate: 'equal', value: decode['id'] },
+            {
+              field: 'authorization',
+              operate: 'equal',
+              value: token
+            },
+            {
+              field: 'isDelete',
+              operate: 'equal',
+              value: false
+            }
+          ]
+          Base_User.getDataFormFilter(filter, 1)
+            .then(userlist => {
+              console.log(userlist)
+              if (userlist.length == 1) {
+                resolve(userlist[0])
+              } else {
+                reject('查询无效')
+              }
+            })
+            .catch(error => {
+              console.log(error)
+              reject(error)
+            })
         }
       })
     })

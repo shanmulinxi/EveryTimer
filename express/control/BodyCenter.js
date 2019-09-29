@@ -6,7 +6,7 @@ const Base_User = require('../../model/Base_User')
 const ErrorCode = require('../common/errorcode')
 
 const ControlName = 'BodyCenter'
-const ControlIndex = 2
+
 /**
  * 控制器
  */
@@ -67,7 +67,7 @@ module.exports = class BodyCenter extends Control {
     // 通过basebody类构建数据对象
     const base_body = new Base_Body(reqData)
 
-    const verifymsg = Base_Body.verifyAllData(base_body)
+    const verifymsg = Base_Body.verifyData(base_body)
     if (verifymsg != true) {
       this.failReturn(res, ErrorCode.BodyCenter_Insert_VerifyAllData, verifymsg)
       return
@@ -195,7 +195,7 @@ module.exports = class BodyCenter extends Control {
           }
         }
         // 数据正确性验证
-        const verifymsg = Base_Body.verifyAllData(operateData, sqlList)
+        const verifymsg = Base_Body.verifyData(operateData, sqlList)
         if (verifymsg != true) {
           this.failReturn(
             res,

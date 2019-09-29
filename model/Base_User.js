@@ -109,10 +109,14 @@ module.exports = class Base_User extends Base {
   /**
    * 数据正确性验证
    */
-  static verifyAllData(obc) {
+  static verifyData(obc, checklist = null) {
     const t_Patt_Number = /[^0-9]/
-    const t_Patt_LoginName = /\W/
-    for (let key in obc) {
+    const t_Patt_Text = /\W/
+    if (checklist == null) {
+      checklist = Object.keys(obc)
+    }
+
+    for (let key of checklist) {
       switch (key) {
         case 'password':
         case 'loginName': {
@@ -120,7 +124,7 @@ module.exports = class Base_User extends Base {
             !obc[key] ||
             obc[key].length < 4 ||
             obc[key].length > 20 ||
-            t_Patt_LoginName.test(obc[key])
+            t_Patt_Text.test(obc[key])
           ) {
             return false
           }

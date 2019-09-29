@@ -127,5 +127,37 @@ module.exports = {
   Auth_SignInForNameBirth_NullReqData: {
     return_code: 20012,
     return_msg: '没有请求数据'
+  },
+  Auth_SignInForNameBirth_ParamError: {
+    return_code: 20013,
+    return_msg: '参数错误'
+  },
+  Auth_SignInForNameBirth_NoSearchUser: {
+    return_code: 20014,
+    return_msg: '没有找到用户'
+  },
+  Auth_SignInForNameBirth_OneMoreUser: {
+    return_code: 20015,
+    return_msg: '服务器错误'
+  },
+  Auth_SignInForNameBirth_UpdateSQLError: {
+    return_code: 20016,
+    return_msg: '更新错误'
+  },
+  Auth_SignInForNameBirth_SQLError: {
+    return_code: 20017,
+    return_msg: '查询错误'
+  },
+  UserCenter_changePassword_NullReqData: {
+    return_code: 21001,
+    return_msg: '没有请求数据'
+  },
+  UserCenter_changePassword_VerifyData: {
+    return_code: 21002,
+    return_msg: '密码格式错误'
+  },
+  UserCenter_changePassword_SQLError: {
+    return_code: 21003,
+    return_msg: '更新错误'
   }
 }

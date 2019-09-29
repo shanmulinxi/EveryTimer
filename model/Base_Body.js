@@ -103,11 +103,12 @@ module.exports = class Base_Body extends Base {
   /**
    * 数据正确性验证
    */
-  static verifyAllData(obc) {
+  static verifyData(obc, checklist = null) {
     const t_Patt_Number = /[^0-9]/
-
-    console.log('verifyAllData', obc)
-    for (let key in obc) {
+    if (checklist == null) {
+      checklist = Object.keys(obc)
+    }
+    for (let key of checklist) {
       switch (key) {
         case 'weight': {
           if (obc[key] == null) continue

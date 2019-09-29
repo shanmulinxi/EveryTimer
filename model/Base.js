@@ -30,7 +30,7 @@ module.exports = class Base {
    * @param {number} [size=0]
    * @returns
    */
-  static getDataFormFilter(filter, pagesize = null, page = null) {
+  static getDataFormFilter(filter = [], pagesize = null, page = null) {
     let limitcommand = ''
     if (pagesize != null) {
       page = page == null ? 0 : page
@@ -42,5 +42,25 @@ module.exports = class Base {
       `SELECT * FROM ${tablename} ` + sqlfilter.command + limitcommand
 
     return Mysql.run(sqlcommand, sqlfilter.param)
+  }
+
+  static updateFormFilter(obc, list = null, filter = []) {
+    const updatelist = []
+
+    if (list === null) {
+      list = Object.keys(obc)
+    }
+    let setcommand = []
+    for (let key of list) {
+      updatelist.push(obc[key])
+      setcommand.push(` ${key} = ? `)
+    }
+    const sqlfilter = Util.creatFilter(filter)
+    const tablename = this.getTabel()
+    const sqlparam = updatelist.concat(sqlfilter.param)
+    const sqlcommand =
+      `UPDATE ${tablename} SET ` + setcommand.join(',') + sqlfilter.command
+    console.log(sqlcommand, sqlparam)
+    return Mysql.run(sqlcommand, sqlparam)
   }
 }

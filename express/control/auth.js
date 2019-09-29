@@ -12,24 +12,8 @@ module.exports = class Auth extends Control {
   }
 
   initIntercept(req, res, next) {
-    console.log(req.originalUrl)
     //自定义拦截器
-    if (req.originalUrl.startsWith('user')) {
-      super
-        .checkHearder(req)
-        .then(result => {
-          //添加数据到body中
-          req.body.user = {}
-          Object.assign(req.body.user, result)
-          next()
-        })
-        .catch(err => {
-          console.log(err)
-          res.json('ERROR')
-        })
-    } else {
-      next()
-    }
+    next()
   }
   initRouter() {
     const _router = super.initRouter()
@@ -45,7 +29,6 @@ module.exports = class Auth extends Control {
     return _router
   }
 
-  //TODO 增加名称缩写加诞辰登录
   /** 小名与生日一次性登录绑定 */
   signInForNameBirth(req, res) {
     const reqData = req.body.data || null
@@ -53,6 +36,53 @@ module.exports = class Auth extends Control {
       this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NullReqData)
       return
     }
+    const { birthday, smallName } = reqData
+    if (!birthday || !smallName) {
+      this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_ParamError)
+      return
+    }
+    const filter = [
+      { field: 'smallName', operate: 'equal', value: smallName },
+      { field: 'birthday', operate: 'equal', value: birthday }
+    ]
+    Base_User.getDataFormFilter(filter, 2)
+      .then(userR => {
+        if (userR.length == 0) {
+          this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NoSearchUser)
+          return
+        } else if (userR.length >= 2) {
+          this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_OneMoreUser)
+          return
+        }
+        //找到唯一用户
+        const userdata = userR[0]
+        // 生成token
+        userdata['authorization'] = Base_User.createToken(userdata)
+        userdata['loginTime'] = Moment().format('YYYY-MM-DD HH:mm:ss')
+        //所有校验完成，返回结果
+        Base_User.updateUser(userdata, ['authorization', 'loginTime'])
+          .then(updateR => {
+            this.successReturn(res, {
+              return_obc: {
+                authorization: userdata['authorization'],
+                username: userdata['userName']
+              }
+            })
+            return
+          })
+          .catch(err => {
+            this.failReturn(
+              res,
+              ErrorCode.Auth_SignInForNameBirth_UpdateSQLError
+            )
+            return
+          })
+      })
+      .catch(err => {
+        console.log(err)
+        this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_SQLError)
+        return
+      })
   }
   /**密码登录 */
   signInForPassword(req, res) {
@@ -66,7 +96,7 @@ module.exports = class Auth extends Control {
     //获取数据
     const operateData = base_user.getData()
     // 登录body校验
-    if (!Base_User.verifyAllData(operateData)) {
+    if (!Base_User.verifyData(operateData)) {
       this.failReturn(res, ErrorCode.Auth_SignIn_VerifyAllData)
       return
     }
@@ -84,7 +114,7 @@ module.exports = class Auth extends Control {
         const userdata = loginsearch[0]
 
         // TODO 依照获取的用户信息，判断登录错误次数，达到一定次数，暂时停止登录尝试
-        console.log(loginsearch)
+
         // 用户密码校验
         if (!base_user.checkWithPassword(userdata.password)) {
           Base_User.loginPassError(userdata)
@@ -103,7 +133,6 @@ module.exports = class Auth extends Control {
             'loginError'
           ])
             .then(updateR => {
-              console.log(updateR)
               this.successReturn(res, {
                 return_obc: {
                   authorization: userdata['authorization'],
@@ -119,7 +148,6 @@ module.exports = class Auth extends Control {
         }
       })
       .catch(err => {
-        console.log(err)
         this.failReturn(res, ErrorCode.Auth_SignIn_SearchLoginName)
         return
       })
@@ -141,7 +169,7 @@ module.exports = class Auth extends Control {
     const base_user = new Base_User(reqData)
     //获取数据
     const operateData = base_user.getData()
-    if (!Base_User.verifyAllData(operateData)) {
+    if (!Base_User.verifyData(operateData)) {
       this.failReturn(res, ErrorCode.Auth_SignUp_VerifyAllData)
       return
     }
@@ -155,12 +183,10 @@ module.exports = class Auth extends Control {
         } else {
           Base_User.insertData(operateData)
             .then(result => {
-              console.log(result)
               this.successReturn(res, {})
               return
             })
             .catch(result => {
-              console.log(err)
               this.failReturn(res, ErrorCode.Auth_SignUp_InsertSQL)
               return
             })

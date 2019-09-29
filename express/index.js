@@ -46,10 +46,12 @@ function initModel(app) {
 
   const staticPage = require('./web/index')
   new staticPage(app)
-  const auth = require('./control/Auth')
-  new auth(app)
-  const bodycenter = require('./control/BodyCenter')
-  new bodycenter(app)
+  const Auth = require('./control/Auth')
+  new Auth(app)
+  const UserCenter = require('./control/UserCenter')
+  new UserCenter(app)
+  const BodyCenter = require('./control/BodyCenter')
+  new BodyCenter(app)
 }
 
 //设置跨域访问，在其他设置前先设置这个
