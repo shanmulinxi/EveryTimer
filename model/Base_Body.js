@@ -9,19 +9,20 @@ module.exports = class Base_Body extends Base {
 
   constructor(obcdata) {
     super(obcdata)
-    const operateDataKeys = Object.keys(Base_Body.getOperate())
+    const operateData = Base_Body.getOperate()
+    const operateDataKeys = Object.keys(operateData)
     operateDataKeys.map(key => {
       if (obcdata[key] != undefined) {
         operateData[key] = obcdata[key]
       }
     })
-
     this.data = operateData
   }
 
   static getOperate() {
     return {
       weight: null,
+      bodyTime: null,
       bmi: null,
       visceralFat: null,
       fatPercent: null,
@@ -82,7 +83,7 @@ module.exports = class Base_Body extends Base {
     const basebodyData = {
       id: 0,
       userid: 0,
-      bodyTime: Moment().format('YYYY-MM-DD HH:mm:ss'),
+      // bodyTime: Moment().format('YYYY-MM-DD HH:mm:ss'),
       creatTime: Moment().format('YYYY-MM-DD HH:mm:ss'),
       editTime: Moment().format('YYYY-MM-DD HH:mm:ss'),
       isDelete: false
@@ -96,7 +97,6 @@ module.exports = class Base_Body extends Base {
       ' , '
     )} ) VALUES ( ${placeholder.join(' , ')} )`
 
-    console.log(sqlcommand)
     return Mysql.run(sqlcommand, insertDataValues)
   }
 

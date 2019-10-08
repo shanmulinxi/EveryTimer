@@ -19,12 +19,12 @@ module.exports = class BodyCenter extends Control {
     super
       .checkHearder(req)
       .then(result => {
-        if (req.originalUrl.lastIndexOf('body') != -1) {
-          //添加数据到body中
-          req.body.user = {}
-          Object.assign(req.body.user, result)
-        }
+        //添加数据到body中
+        req.body.user = {}
+        Object.assign(req.body.user, result)
+
         next()
+        return
       })
       .catch(err => {
         Base_Body.test()
