@@ -1,0 +1,60 @@
+body {
+  background: #000;
+}
+
+#messageicon {
+  margin-bottom: 1rem;
+  font-size: 2.5em;
+  /* height: 2.5em; */
+}
+
+#messgeContent {
+  position: absolute;
+  padding: 2rem;
+  background: #000;
+}
+
+#loginContent {
+  height: 40%;
+  width: 70%;
+  justify-content: space-around;
+}
+#realContent {
+  height: 100%;
+  width: 100%;
+  justify-content: flex-start;
+}
+#usernamediv {
+  width: 80%;
+  height: 25%;
+}
+#usernameinput {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background-color: transparent;
+  border-width: 0;
+}
+
+#loginbutton {
+  width: 80%;
+  height: 25%;
+  text-align: center;
+  background-color: transparent;
+}
+
+#realHead {
+  margin-top: 5%;
+  height: 15%;
+  width: 95%;
+}
+#realCenter {
+  height: 38%;
+  width: 95%;
+  margin-top: 2%;
+}
+#realFooter {
+  height: 38%;
+  width: 95%;
+  margin-top: 2%;
+}

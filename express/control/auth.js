@@ -26,9 +26,60 @@ module.exports = class Auth extends Control {
     _router.post('/signInForNameBirth', (req, res) => {
       this.signInForNameBirth(req, res)
     })
+    _router.post('/signInForUser', (req, res) => {
+      this.signInForUser(req, res)
+    })
     return _router
   }
-
+  /** 简易登录 */
+  //TODO 错误信息修改
+  signInForUser(req, res) {
+    const reqData = req.body || null
+    if (!reqData) {
+      this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NullReqData)
+      return
+    }
+    const { loginName } = reqData
+    const filter = [{ field: 'loginName', operate: 'equal', value: loginName }]
+    Base_User.getDataFormFilter(filter, 2)
+      .then(userR => {
+        if (userR.length == 0) {
+          this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NoSearchUser)
+          return
+        } else if (userR.length >= 2) {
+          this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_OneMoreUser)
+          return
+        }
+        //找到唯一用户
+        const userdata = userR[0]
+        // 生成token
+        userdata['authorization'] = Base_User.createToken(userdata)
+        userdata['loginTime'] = Moment().format('YYYY-MM-DD HH:mm:ss')
+        //所有校验完成，返回结果
+        Base_User.updateUser(userdata, ['authorization', 'loginTime'])
+          .then(updateR => {
+            this.successReturn(res, {
+              return_obc: {
+                authorization: userdata['authorization'],
+                username: userdata['userName']
+              }
+            })
+            return
+          })
+          .catch(err => {
+            this.failReturn(
+              res,
+              ErrorCode.Auth_SignInForNameBirth_UpdateSQLError
+            )
+            return
+          })
+      })
+      .catch(err => {
+        console.log(err)
+        this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_SQLError)
+        return
+      })
+  }
   /** 小名与生日一次性登录绑定 */
   signInForNameBirth(req, res) {
     const reqData = req.body.data || null

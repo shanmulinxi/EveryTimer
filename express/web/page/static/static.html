@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"
+    />
+    <title>WelCome</title>
+
+    <link rel="stylesheet" href="../public/css/style.css" />
+    <link rel="stylesheet" href="../public/page/static/static.css" />
+    <link rel="stylesheet" href="../public/css/iconfont.css" />
+
+    <script src="../public/third/jquery-3.4.1.js"></script>
+    <script src="../public/third/vue.js"></script>
+    <script src="../public/third/snowflakes.min.js"></script>
+    <script src="../public/common.js"></script>
+    <!-- <script src="../public/iconfont.js"></script> -->
+  </head>
+
+  <body>
+    <div class="container flexCenter" id="app">
+      <div id="loginContent" class="mBorder flexCenter" v-if="username===null">
+        <div id="usernamediv" class="flexCenter  mBorder">
+          <input
+            type="text"
+            id="usernameinput"
+            class="mFont"
+            v-model="loginName"
+            placeholder="USERNAME"
+          />
+        </div>
+
+        <div
+          id="loginbutton"
+          class="flexCenter mFont mBorder"
+          v-on:click="loginclick"
+        >
+          ENTER
+        </div>
+      </div>
+      <div id="realContent" class="flexCenter" v-else>
+        <div id="realHead" class="flexCenter mFont mBorder">
+          {{ username }}
+        </div>
+        <div id="realCenter" class="flexCenter mFont mBorder"></div>
+        <div id="realFooter" class="flexCenter mFont mBorder"></div>
+      </div>
+      <div
+        id="messgeContent"
+        class="flexCenter mFont mBorder"
+        v-show="messgeShow"
+      >
+        <span
+          class="iconfont "
+          v-bind:class="messgeIcon"
+          id="messageicon"
+          v-bind:style="{color:messgeColor}"
+          v-if="false"
+        ></span>
+
+        <p>{{ messgeContent }}</p>
+      </div>
+    </div>
+    <script>
+      var sf = new Snowflakes({
+        color: '#ffffff',
+        count: 75,
+        minOpacity: 0.2,
+        maxOpacity: 0.6
+      })
+      var gloal = {
+        headers: { 'Content-Type': 'application/json; charset=UTF-8' }
+      }
+      var app = new Vue({
+        el: '#app',
+        data: {
+          loginName: 'shanmulinxi',
+          messgeShow: false,
+          messgeContent: 'content',
+          messgeIcon: 'icon-cuowu1',
+          messgeColor: 'red',
+          username: null
+        },
+        methods: {
+          messageTo: function(text) {
+            this.messgeContent = text
+            this.messgeShow = true
+            setTimeout(() => {
+              this.messgeShow = false
+              this.messgeContent = ''
+            }, 2500)
+          },
+          loginclick: function() {
+            $.ajax({
+              type: 'POST',
+              url: '/auth/signInForUser',
+              dataType: 'json',
+              data: JSON.stringify({
+                loginName: this.loginName
+              }),
+
+              headers: gloal['headers'],
+              // processData: false,
+              success: res => {
+                console.log(res)
+                this.messageTo(res.return_msg)
+                if (res.return_code == 200 && res.return_obc) {
+                  const obc = res.return_obc
+                  const userdata = {
+                    authorization: obc['authorization'],
+                    username: obc['username']
+                  }
+                  this.username = obc['username']
+                  gloal['userdata'] = userdata
+                  gloal['headers']['authorization'] = obc['authorization']
+                  localStorage.setItem('authorization', obc['authorization'])
+                  localStorage.setItem('username', obc['username'])
+                }
+              }
+            })
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

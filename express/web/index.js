@@ -18,7 +18,14 @@ module.exports = class staticPage extends Control {
   initRouter() {
     const _router = super.initRouter()
     _router.get('/', (req, res) => {
-      res.sendFile(PagePath + '/index.html')
+      var deviceAgent = req.headers['user-agent'].toLowerCase()
+      var agentID = deviceAgent.match(/(iphone|ipod|ipad|android)/)
+      if (agentID) {
+        console.log('手机访问')
+      } else {
+        console.log('电脑访问')
+      }
+      res.sendFile(PagePath + '/static/static.html')
     })
     _router.get('/index', (req, res) => {
       res.sendFile(PagePath + '/index.html')

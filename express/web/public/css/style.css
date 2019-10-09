@@ -14,7 +14,6 @@ body {
 div,
 p {
   font-family: 'Microsoft YaHei', 'Microsoft JhengHei', 'SimHei', 'YouYuan';
-
 }
 
 p {
@@ -23,6 +22,11 @@ p {
 
 input {
   padding: 0;
+}
+
+.container {
+  height: 100%;
+  width: 100%;
 }
 
 .sFont {
@@ -43,16 +47,16 @@ input {
   color: #fff;
 }
 
-.container {
-  height: 100%;
-  width: 100%;
-}
-
 .flexCenter {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.mBorder {
+  border: #fff 0.2rem solid;
+  border-radius: 1rem;
 }
 
 .whiteBorder {
@@ -65,8 +69,6 @@ input {
   border-radius: 0.4rem;
 }
 
-
-
 /* 去掉input[type="number"]的默认样式 */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -74,8 +76,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* chrome */
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
   /* firefox */
-
 }
