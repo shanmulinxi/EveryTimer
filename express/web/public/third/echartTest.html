@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+  <title>WelCome</title>
+
+  <script src="echarts.js"></script>
+
+  <!-- <script src="../public/iconfont.js"></script> -->
+  <style>
+    html {
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      height: 100%;
+      width: 100%;
+    }
+
+    #app {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container flexCenter" id="app">
+
+  </div>
+  <script>
+    var myChart = echarts.init(document.getElementById('app'));
+    // 指定图表的配置项和数据
+    var option = {
+      title: {
+        text: '折线图堆叠'
+      },
+      tooltip: {
+        triggerOn: 'none',
+        position: function (pt) {
+          return [pt[0], 130];
+        }
+      },
+      legend: {
+        data: ['邮件营销']
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      toolbox: {
+        left: 'center',
+        itemSize: 25,
+        top: 55,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          restore: {}
+        }
+      },
+      xAxis: {
+        type: 'time',
+        axisPointer: {
+          value: '2016-10-7',
+          snap: true,
+          lineStyle: {
+            color: '#004E52',
+            opacity: 0.5,
+            width: 2
+          },
+          label: {
+            show: true,
+            formatter: function (params) {
+              return echarts.format.formatTime('yyyy-MM-dd', params.value);
+            },
+            backgroundColor: '#004E52'
+          },
+          handle: {
+            show: true,
+            color: '#004E52'
+          }
+        },
+        // boundaryGap: false,
+        splitLine: {
+          show: false
+        }
+      },
+      yAxis: {
+        type: 'value',
+        axisTick: {
+          inside: true
+        },
+        splitLine: {
+          show: false
+        },
+        axisLabel: {
+          inside: true,
+          formatter: '{value}\n'
+        },
+      },
+      dataZoom: [{
+        type: 'inside',
+        throttle: 50
+      }],
+      series: [{
+          name: '邮件营销',
+          type: 'line',
+          stack: '总量',
+          smooth: true,
+          markPoint: {
+            data: [{
+                type: 'max',
+                name: '最大值'
+              },
+              {
+                type: 'min',
+                name: '最小值'
+              }
+            ]
+          },
+          data: [
+            ['2019-10-01', 0],
+            ['2019-10-02', 1],
+            ['2019-10-03', 5],
+            ['2019-10-04', 11],
+            ['2019-10-05', 12],
+            ['2019-10-06', 18],
+            ['2019-10-07', 11]
+          ]
+        },
+
+
+      ]
+    };
+
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+  </script>
+</body>
+
+</html>
