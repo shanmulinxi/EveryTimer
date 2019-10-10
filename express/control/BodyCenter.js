@@ -249,31 +249,19 @@ module.exports = class BodyCenter extends Control {
         }
 
         // 设置userid  只有本人或联结对象
-        const useridlist = filter
-          .filter(t => t.field == 'userid')
-          .map(it => {
-            it.operate = 'equal'
-            it.value = searchUserId
-          })
-        if (useridlist.length == 0) {
-          filter.push({
-            field: 'userid',
-            operate: 'equal',
-            value: searchUserId
-          })
-        }
         // 设置isDelete 默认获取未删除的
-        const deletelist = filter
-          .filter(t => t.field == 'isDelete')
-          .map(it => {
-            it.operate = 'equal'
-            it.value = false
-          })
-        if (deletelist.length == 0) {
-          filter.push({ field: 'isDelete', operate: 'equal', value: false })
-        }
+        filter.push({
+          field: 'userid',
+          operate: 'equal',
+          value: searchUserId
+        })
+        filter.push({
+          field: 'isDelete',
+          operate: 'equal',
+          value: 'false'
+        })
 
-        Base_Body.getDataFormFilter(filter).then(result => {
+        Base_Body.getDataFormFilter({ filter }).then(result => {
           this.successReturn(res, { return_obc: result })
           return
         })

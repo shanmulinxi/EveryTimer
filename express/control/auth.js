@@ -41,7 +41,7 @@ module.exports = class Auth extends Control {
     }
     const { loginName } = reqData
     const filter = [{ field: 'loginName', operate: 'equal', value: loginName }]
-    Base_User.getDataFormFilter(filter, 2)
+    Base_User.getDataFormFilter({ filter, pagesize: 2 })
       .then(userR => {
         if (userR.length == 0) {
           this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NoSearchUser)
@@ -96,7 +96,7 @@ module.exports = class Auth extends Control {
       { field: 'smallName', operate: 'equal', value: smallName },
       { field: 'birthday', operate: 'equal', value: birthday }
     ]
-    Base_User.getDataFormFilter(filter, 2)
+    Base_User.getDataFormFilter({ filter, pagesize: 2 })
       .then(userR => {
         if (userR.length == 0) {
           this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NoSearchUser)

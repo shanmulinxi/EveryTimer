@@ -26,11 +26,20 @@ module.exports = class Base {
   /**
    *根据条件获取数据
    *
-   * @param {*} id
+   * @param {filter} {
+                      field: 'bodyTime',
+                      operate: 'between',
+                      value: '2019-10-07',
+                    }
    * @param {number} [size=0]
    * @returns
    */
-  static getDataFormFilter(filter = [], pagesize = null, page = null) {
+  static getDataFormFilter({
+    filter = [],
+    pagesize = null,
+    page = null,
+    order = null
+  }) {
     let limitcommand = ''
     if (pagesize != null) {
       page = page == null ? 0 : page
@@ -40,7 +49,6 @@ module.exports = class Base {
     const tablename = this.getTabel()
     const sqlcommand =
       `SELECT * FROM ${tablename} ` + sqlfilter.command + limitcommand
-
     return Mysql.run(sqlcommand, sqlfilter.param)
   }
 
@@ -60,7 +68,6 @@ module.exports = class Base {
     const sqlparam = updatelist.concat(sqlfilter.param)
     const sqlcommand =
       `UPDATE ${tablename} SET ` + setcommand.join(',') + sqlfilter.command
-    console.log(sqlcommand, sqlparam)
     return Mysql.run(sqlcommand, sqlparam)
   }
 }

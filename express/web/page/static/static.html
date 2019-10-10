@@ -14,6 +14,7 @@
 
     <script src="../public/third/jquery-3.4.1.js"></script>
     <script src="../public/third/vue.js"></script>
+    <script src="../public/third/moment.min.js"></script>
     <script src="../public/third/snowflakes.min.js"></script>
     <script src="../public/common.js"></script>
     <!-- <script src="../public/iconfont.js"></script> -->
@@ -117,6 +118,31 @@
                   gloal['headers']['authorization'] = obc['authorization']
                   localStorage.setItem('authorization', obc['authorization'])
                   localStorage.setItem('username', obc['username'])
+                  this.enterContent()
+                }
+              }
+            })
+          },
+          enterContent: function() {
+            $.ajax({
+              type: 'POST',
+              url: '/bodycenter/searchbody',
+              dataType: 'json',
+              data: JSON.stringify({
+                data: {
+                  filter: [
+                    {
+                      field: 'bodyTime',
+                      operate: 'between',
+                      value: '2019-10-07',
+                      extra: '2019-10-11'
+                    }
+                  ]
+                }
+              }),
+              headers: gloal['headers'],
+              success: res => {
+                if (res.return_code == 200 && res.return_obc) {
                 }
               }
             })

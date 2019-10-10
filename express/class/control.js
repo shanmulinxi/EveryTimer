@@ -133,7 +133,7 @@ module.exports = class Control {
               value: false
             }
           ]
-          Base_User.getDataFormFilter(filter, 1)
+          Base_User.getDataFormFilter({ filter, pagesize: 1 })
             .then(userlist => {
               console.log(userlist)
               if (userlist.length == 1) {
