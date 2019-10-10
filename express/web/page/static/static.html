@@ -45,17 +45,24 @@
 
       <div id="realCenter" class="flexCenter mFont mBorder" v-bind:style="{height: animate.chartDivHeight+'%'}"
         v-on:click="openCharts">
-        <div id="chartsDiv" class="mBorder" v-show="operateType=='charts'">
+        <transition name="centerAnima">
+          <div id="chartsDiv" class="mBorder" v-show="operateType=='charts'">
 
-        </div>
-        <span class="commonicon iconfont icon-arrow-circle-o-top1" v-show="operateType!='charts'"></span>
+          </div>
+        </transition>
+        <transition name="commoniconAnima">
+          <span class="commonicon iconfont icon-arrow-circle-o-top1" v-show="operateType!='charts'"></span>
+        </transition>
       </div>
 
 
 
       <div id="realFooter" class="flexCenter mFont mBorder"
         v-bind:style="{height: (animate.SumDivHeight-animate.chartDivHeight)+'%'}" v-on:click="openAdd">
-        <span class="commonicon iconfont icon-arrow-circle-o-top" v-show="operateType!='add'"></span>
+        <transition name="commoniconAnima">
+          <span class="commonicon iconfont icon-arrow-circle-o-top" v-show="operateType!='add'"></span>
+        </transition>
+
       </div>
     </div>
     <div id="messgeContent" class="flexCenter mFont mBorder" v-show="messgeShow">

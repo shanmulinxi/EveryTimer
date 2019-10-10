@@ -80,3 +80,37 @@ body {
   height: 95%;
   width: 95%;
 }
+
+.centerAnima-enter-active,
+.centerAnima-leave-active {
+  transition: all .7s;
+}
+
+.centerAnima-enter,
+.centerAnima-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+  {
+
+  transform: scale(1, 0);
+  opacity: 0;
+}
+
+.centerAnima-enter-to,
+.centerAnima-leave
+
+/* .fade-leave-active below version 2.1.8 */
+  {
+  opacity: 1;
+  transform: scale(1, 1);
+}
+
+.commoniconAnima-enter-active {
+  transition: all 0.7s linear 0.7s;
+
+}
+
+.commoniconAnima-enter,
+.commoniconAnima-leave-to {
+  opacity: 0;
+}
