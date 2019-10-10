@@ -1,6 +1,12 @@
-body {
-  background: #000;
+html {
+  background: black
 }
+
+body {
+  background: rgba(51, 51, 51, 1);
+}
+
+
 
 #messageicon {
   margin-bottom: 1rem;
@@ -19,15 +25,18 @@ body {
   width: 70%;
   justify-content: space-around;
 }
+
 #realContent {
   height: 100%;
   width: 100%;
   justify-content: flex-start;
 }
+
 #usernamediv {
   width: 80%;
   height: 25%;
 }
+
 #usernameinput {
   width: 100%;
   height: 100%;
@@ -48,13 +57,26 @@ body {
   height: 15%;
   width: 95%;
 }
+
 #realCenter {
-  height: 38%;
+  height: 37%;
   width: 95%;
   margin-top: 2%;
 }
-#realFooter {
-  height: 38%;
+
+#realCenterHidden {
+  height: 10%;
   width: 95%;
   margin-top: 2%;
+}
+
+#realFooter {
+  height: 37%;
+  width: 95%;
+  margin-top: 2%;
+}
+
+#chartsDiv {
+  height: 95%;
+  width: 95%;
 }

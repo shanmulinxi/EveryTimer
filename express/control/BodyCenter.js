@@ -236,7 +236,14 @@ module.exports = class BodyCenter extends Control {
       return
     }
 
-    const { capule, filter } = reqData
+    let {
+      capule,
+      filter,
+      order
+    } = reqData
+    if (!order) {
+      order = null
+    }
     let searchUserId = reqUser['id']
     Base_User.getDataFormId(reqUser['id'])
       .then(userR => {
@@ -261,8 +268,13 @@ module.exports = class BodyCenter extends Control {
           value: 'false'
         })
 
-        Base_Body.getDataFormFilter({ filter }).then(result => {
-          this.successReturn(res, { return_obc: result })
+        Base_Body.getDataFormFilter({
+          filter,
+          order
+        }).then(result => {
+          this.successReturn(res, {
+            return_obc: result
+          })
           return
         })
       })

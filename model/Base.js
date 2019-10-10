@@ -31,7 +31,10 @@ module.exports = class Base {
                       operate: 'between',
                       value: '2019-10-07',
                     }
-   * @param {number} [size=0]
+   * @param {order} {
+                      field: 'bodyTime',
+                      type: 'DESC'||'ASC',
+                    }
    * @returns
    */
   static getDataFormFilter({
@@ -45,10 +48,35 @@ module.exports = class Base {
       page = page == null ? 0 : page
       limitcommand += ` LIMIT ${page * pagesize},${pagesize}`
     }
+
+    let ordercommand = ""
+    if (order != null) {
+      let orderParamASC = []
+      let orderParamDESC = []
+      order.map(item => {
+        if (item.type == "DESC") {
+          orderParamDESC.push(item.field)
+        } else if (item.type == "ASC") {
+          orderParamASC.push(item.field)
+        }
+      })
+      if (orderParamASC.length > 0) {
+        orderParamASC = [orderParamASC.join(', ') + " ASC "]
+      }
+      if (orderParamDESC.length > 0) {
+        orderParamDESC = [orderParamDESC.join(', ') + " DESC "]
+      }
+      let orderParam = orderParamASC.concat(orderParamDESC)
+      if (orderParam.length > 0) {
+        ordercommand = " ORDER BY " + orderParam.join(', ')
+      }
+
+    }
     const sqlfilter = Util.creatFilter(filter)
     const tablename = this.getTabel()
     const sqlcommand =
-      `SELECT * FROM ${tablename} ` + sqlfilter.command + limitcommand
+      `SELECT * FROM ${tablename} ` + sqlfilter.command + limitcommand + ordercommand
+
     return Mysql.run(sqlcommand, sqlfilter.param)
   }
 

@@ -72,7 +72,6 @@ module.exports = class Base_Body extends Base {
     const sqlcommand = `UPDATE base_body SET ${extercommand.join(
       ','
     )}WHERE id = ?`
-    console.log(sqlcommand, updatelist)
     return Mysql.run(sqlcommand, updatelist)
   }
   /**
