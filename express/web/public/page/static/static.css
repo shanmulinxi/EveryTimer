@@ -91,13 +91,73 @@ body {
   height: 20%;
   width: 95%;
   flex-direction: row;
+  justify-content: space-around;
 }
+
+#unitDropdown {
+  /* height: 100%; */
+}
+
+.DateTimePickerDiv {
+  width: 45%;
+}
+
+
+
+#addDatePicker {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+#addTimePicker {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
 #addWeightDiv {
   margin-top: 2%;
   height: 20%;
   width: 95%;
   flex-direction: row;
+  justify-content: flex-start;
 }
+
+#addWeightInput {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+#addWeightInputLabel {
+  width: 35%;
+  height: 80%;
+}
+
+#addWeightInputDiv {
+  width: 40%;
+  height: 80%;
+}
+
+#addWeightInputUnit {
+  width: 20%;
+  height: 80%;
+}
+
+#weightUnitButton {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+#addbutton {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  width: 50%;
+}
+
 #addButtonDiv {
   margin-top: 2%;
   height: 20%;
@@ -125,7 +185,7 @@ body {
 .centerAnima-leave-to
 
 /* .fade-leave-active below version 2.1.8 */
- {
+  {
   transform: scale(1, 0);
   opacity: 0;
 }
@@ -134,7 +194,7 @@ body {
 .centerAnima-leave
 
 /* .fade-leave-active below version 2.1.8 */
- {
+  {
   opacity: 1;
   transform: scale(1, 1);
 }

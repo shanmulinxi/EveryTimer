@@ -36,18 +36,33 @@ module.exports = class Auth extends Control {
   signInForUser(req, res) {
     const reqData = req.body || null
     if (!reqData) {
-      this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NullReqData)
+      this.failReturn(res, ErrorCode.NullReqData)
       return
     }
-    const { loginName } = reqData
-    const filter = [{ field: 'loginName', operate: 'equal', value: loginName }]
-    Base_User.getDataFormFilter({ filter, pagesize: 2 })
+    const {
+      loginName
+    } = reqData
+    const filter = [{
+        field: 'loginName',
+        operate: 'equal',
+        value: loginName
+      },
+      {
+        field: 'isDelete',
+        operate: 'equal',
+        value: 'false'
+      }
+    ]
+    Base_User.getDataFormFilter({
+        filter,
+        pagesize: 2
+      })
       .then(userR => {
         if (userR.length == 0) {
-          this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NoSearchUser)
+          this.failReturn(res, ErrorCode.NoSearchUser)
           return
         } else if (userR.length >= 2) {
-          this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_OneMoreUser)
+          this.failReturn(res, ErrorCode.OneMoreUser)
           return
         }
         //找到唯一用户
@@ -58,25 +73,52 @@ module.exports = class Auth extends Control {
         //所有校验完成，返回结果
         Base_User.updateUser(userdata, ['authorization', 'loginTime'])
           .then(updateR => {
-            this.successReturn(res, {
-              return_obc: {
-                authorization: userdata['authorization'],
-                username: userdata['userName']
-              }
-            })
-            return
+            if (userdata['capuleid'] == null) {
+
+              this.successReturn(res, {
+                return_obc: {
+                  authorization: userdata['authorization'],
+                  username: userdata['userName'],
+                  capuleid: userdata['capuleid'],
+                }
+              })
+              return
+            } else {
+              Base_User.getDataFormFilter({
+                filter: [{
+                  field: 'id',
+                  operate: 'equal',
+                  value: userdata['capuleid']
+                }, {
+                  field: 'isDelete',
+                  operate: 'equal',
+                  value: 'false'
+                }],
+                pagesize: 1
+              }).then(capuleuser => {
+                this.successReturn(res, {
+                  return_obc: {
+                    authorization: userdata['authorization'],
+                    username: userdata['userName'],
+                    capuleid: userdata['capuleid'],
+                    capuleusername: capuleuser[0]['userName'],
+                  }
+                })
+                return
+              })
+            }
           })
           .catch(err => {
             this.failReturn(
               res,
-              ErrorCode.Auth_SignInForNameBirth_UpdateSQLError
+              ErrorCode.UpdateSQLError
             )
             return
           })
       })
       .catch(err => {
         console.log(err)
-        this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_SQLError)
+        this.failReturn(res, ErrorCode.SQLError)
         return
       })
   }
@@ -87,16 +129,29 @@ module.exports = class Auth extends Control {
       this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NullReqData)
       return
     }
-    const { birthday, smallName } = reqData
+    const {
+      birthday,
+      smallName
+    } = reqData
     if (!birthday || !smallName) {
       this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_ParamError)
       return
     }
-    const filter = [
-      { field: 'smallName', operate: 'equal', value: smallName },
-      { field: 'birthday', operate: 'equal', value: birthday }
+    const filter = [{
+        field: 'smallName',
+        operate: 'equal',
+        value: smallName
+      },
+      {
+        field: 'birthday',
+        operate: 'equal',
+        value: birthday
+      }
     ]
-    Base_User.getDataFormFilter({ filter, pagesize: 2 })
+    Base_User.getDataFormFilter({
+        filter,
+        pagesize: 2
+      })
       .then(userR => {
         if (userR.length == 0) {
           this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NoSearchUser)
@@ -179,10 +234,10 @@ module.exports = class Auth extends Control {
           userdata['loginTime'] = Moment().format('YYYY-MM-DD HH:mm:ss')
           //所有校验完成，返回结果
           Base_User.updateUser(userdata, [
-            'authorization',
-            'loginTime',
-            'loginError'
-          ])
+              'authorization',
+              'loginTime',
+              'loginError'
+            ])
             .then(updateR => {
               this.successReturn(res, {
                 return_obc: {

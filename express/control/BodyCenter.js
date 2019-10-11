@@ -66,8 +66,9 @@ module.exports = class BodyCenter extends Control {
     }
     // 通过basebody类构建数据对象
     const base_body = new Base_Body(reqData)
-
-    const verifymsg = Base_Body.verifyData(base_body)
+    //获取数据
+    const operateData = base_body.getData()
+    const verifymsg = Base_Body.verifyData(operateData)
     if (verifymsg != true) {
       this.failReturn(res, ErrorCode.BodyCenter_Insert_VerifyAllData, verifymsg)
       return
@@ -77,13 +78,17 @@ module.exports = class BodyCenter extends Control {
       return
     }
 
-    //获取数据
-    const operateData = base_body.getData()
+
     console.log(operateData)
     Base_Body.insertData(operateData)
       .then(result => {
         console.log(result)
-        this.successReturn(res, {})
+        this.successReturn(res, {
+          return_obc: {
+            id: result.insertId,
+            ...operateData
+          }
+        })
         return
       })
       .catch(err => {
