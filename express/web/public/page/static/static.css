@@ -1,12 +1,10 @@
 html {
-  background: black
+  background: black;
 }
 
 body {
   background: rgba(51, 51, 51, 1);
 }
-
-
 
 #messageicon {
   margin-bottom: 1rem;
@@ -18,6 +16,7 @@ body {
   position: absolute;
   padding: 2rem;
   background: #000;
+  z-index: 9999;
 }
 
 #loginContent {
@@ -77,21 +76,56 @@ body {
 }
 
 #chartsDiv {
-  height: 95%;
+  height: 100%;
+  width: 100%;
+}
+
+#addDiv {
+  height: 100%;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+#bodyTimeDiv {
+  margin-top: 2%;
+  height: 20%;
   width: 95%;
+  flex-direction: row;
+}
+#addWeightDiv {
+  margin-top: 2%;
+  height: 20%;
+  width: 95%;
+  flex-direction: row;
+}
+#addButtonDiv {
+  margin-top: 2%;
+  height: 20%;
+  width: 95%;
+  flex-direction: row;
+}
+
+.deleteButton {
+  background-color: transparent;
+  text-align: center;
+  font-size: 1rem;
+  color: #dd6b66;
+  font-weight: bold;
+  border: #dd6b66 0.1rem solid;
+  height: 1.5rem;
+  width: 100%;
 }
 
 .centerAnima-enter-active,
 .centerAnima-leave-active {
-  transition: all .7s;
+  transition: all 0.7s;
 }
 
 .centerAnima-enter,
 .centerAnima-leave-to
 
 /* .fade-leave-active below version 2.1.8 */
-  {
-
+ {
   transform: scale(1, 0);
   opacity: 0;
 }
@@ -100,14 +134,13 @@ body {
 .centerAnima-leave
 
 /* .fade-leave-active below version 2.1.8 */
-  {
+ {
   opacity: 1;
   transform: scale(1, 1);
 }
 
 .commoniconAnima-enter-active {
   transition: all 0.7s linear 0.7s;
-
 }
 
 .commoniconAnima-enter,

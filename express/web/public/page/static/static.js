@@ -1,6 +1,11 @@
 var realChart
-var initChart = function () {
-  realChart = echarts.init(document.getElementById('chartsDiv'));
+var statictest = function(params) {
+  console.log('statictest' + params)
+}
+var initChart = function() {
+  realChart = echarts.init(document.getElementById('chartsDiv'), null, {
+    renderer: 'svg'
+  })
   // 指定图表的配置项和数据
   var option = {
     title: {
@@ -14,14 +19,36 @@ var initChart = function () {
       textStyle: {
         color: '#FFF',
         fontSize: 14,
-        fontWeight: 'bold',
+        fontWeight: 'bold'
       }
     },
     tooltip: {
       triggerOn: 'none',
-      position: function (pt) {
-        return [pt[0], 130];
+      alwaysShowContent: true,
+      enterable: true,
+      // renderMode: 'richText',
+      // position: function(pt) {
+      //   return [pt[0], 130]
+      // }
+      formatter: function(params) {
+        let show = params[0].axisValueLabel + `<br/>`
+        params.map(t => {
+          show += `<span style="color:${t.color}">${t.seriesName}: ${
+            t.data[1]
+          } KG</span><br/>`
+        })
+
+        show += `<button class="deleteButton sBorder flexCenter sFont"   onclick="deleteData('${
+          params[0].data[2]
+        }')">DELETE</button>`
+        return show
+      },
+      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+      textStyle: {
+        fontSize: 14,
+        fontWeight: 'bold'
       }
+      // extraCssText: 'background: rgba(255, 255, 255, 0.1);'
     },
 
     grid: {
@@ -37,24 +64,21 @@ var initChart = function () {
       itemGap: 15,
       // top: 55,
       feature: {
-
         dataZoom: {
-          yAxisIndex: 'none',
-
-        },
+          yAxisIndex: 'none'
+        }
         // restore: {}
       },
       iconStyle: {
         borderColor: '#FFF',
-        borderWidth: 2,
-      },
+        borderWidth: 2
+      }
     },
     xAxis: {
-
       type: 'time',
       axisLine: {
         lineStyle: {
-          color: '#FFF',
+          color: '#FFF'
         }
       },
       axisPointer: {
@@ -68,15 +92,15 @@ var initChart = function () {
         },
         label: {
           show: true,
-          formatter: function (params) {
-            return echarts.format.formatTime('yyyy-MM-dd', params.value);
+          formatter: function(params) {
+            return echarts.format.formatTime('yyyy-MM-dd', params.value)
           },
           backgroundColor: 'rgba(51,51,51,0.5)',
           color: '#FFF',
           borderColor: '#FFF',
           borderWidth: 1,
-          fontSize: 14,
-          fontWeight: 'bold',
+          fontSize: 15,
+          fontWeight: 'bold'
         },
         triggerTooltip: true,
         handle: {
@@ -84,23 +108,23 @@ var initChart = function () {
           color: '#FFF',
           size: 50,
           margin: 35,
-          throttle: 50,
+          throttle: 50
         }
       },
       axisLabel: {
-        formatter: function (value, index) {
+        formatter: function(value, index) {
           // 格式化成月/日，只在第一个刻度显示年份
-          var date = new Date(value);
-          var texts = [(date.getMonth() + 1), date.getDate()];
+          var date = new Date(value)
+          var texts = [date.getMonth() + 1, date.getDate()]
           if (index === 0) {
-            texts.unshift(date.getYear());
+            // texts.unshift(date.getYear());
           }
-          return texts.join('/');
+          return texts.join('/')
         },
         color: '#FFF',
         // fontWeight: 'bold',
         fontSize: 14,
-        align: 'center',
+        align: 'center'
       },
       axisTick: {
         inside: true
@@ -115,7 +139,7 @@ var initChart = function () {
       nameTextStyle: {
         color: '#FFF',
         // fontWeight: 'bold',
-        fontSize: 14,
+        fontSize: 14
       },
       type: 'value',
       scale: true,
@@ -127,66 +151,87 @@ var initChart = function () {
       },
       axisLine: {
         lineStyle: {
-          color: '#FFF',
+          color: '#FFF'
         }
       },
       axisLabel: {
         inside: true,
-        formatter: function (value) {
-          return (value / 1000).toFixed(0) + '\n';
+        formatter: function(value) {
+          return value + '\n'
+          // return (value / 1000).toFixed(0) + '\n'
         },
         color: '#FFF',
         // fontWeight: 'bold',
-        fontSize: 14,
-      },
+        fontSize: 14
+      }
     },
-    dataZoom: [{
-      type: 'inside',
-      // throttle: 50
-    }],
+    dataZoom: [
+      {
+        type: 'inside'
+        // throttle: 50
+      }
+    ],
     color: ['#73a373', '#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53']
-  };
-
+  }
 
   // 使用刚指定的配置项和数据显示图表。
-  realChart.setOption(option);
+  realChart.setOption(option)
 }
 
-var setOptionChart = function (selfname, selfdata) {
+var showChartLoading = function(bool) {
+  if (bool) {
+    realChart.showLoading('default', {
+      text: 'LOADING',
+      color: '#73a373',
+      textColor: '#000',
+      maskColor: 'rgba(255, 255, 255, 0.1)',
+      zlevel: 0
+    })
+  } else {
+    realChart.hideLoading()
+  }
+}
+
+var setOptionChart = function(selfname, selfdata) {
   const option = {
     legend: {
       data: [selfname]
     },
-    series: [{
-      name: selfname,
-      type: 'line',
-      // stack: '总量',
-      smooth: true,
-      markPoint: {
-        symbol: 'pin',
-        label: {
-          formatter: function (item) {
-            return (item.value / 1000).toFixed(1);
+    series: [
+      {
+        name: selfname,
+        type: 'line',
+        // stack: '总量',
+        smooth: true,
+        markPoint: {
+          symbol: 'circle',
+          symbolSize: 35,
+          label: {
+            formatter: function(item) {
+              return item.value
+              // return (item.value / 1000).toFixed(1)
+            },
+            color: '#FFF',
+            fontWeight: 'bold',
+            fontSize: 13
           },
-          color: '#FFF',
-          fontWeight: 'bold',
-          fontSize: 13,
+          data: [
+            {
+              type: 'max',
+              name: 'MAX'
+            },
+            {
+              type: 'min',
+              name: 'MIN'
+            }
+          ]
         },
-        data: [{
-            type: 'max',
-            name: 'MAX'
-          },
-          {
-            type: 'min',
-            name: 'MIN'
-          }
-        ]
-      },
-      // itemStyle: {
-      //   color: 
-      // },
-      data: selfdata
-    }, ]
+        // itemStyle: {
+        //   color:
+        // },
+        data: selfdata
+      }
+    ]
   }
-  realChart.setOption(option);
+  realChart.setOption(option)
 }

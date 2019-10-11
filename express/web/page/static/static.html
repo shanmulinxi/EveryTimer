@@ -1,77 +1,128 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"
+    />
+    <title>WelCome</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport"
-    content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
-  <title>WelCome</title>
+    <link rel="stylesheet" href="../public/css/style.css" />
 
-  <link rel="stylesheet" href="../public/css/style.css" />
+    <link rel="stylesheet" href="../public/css/iconfont.css" />
+    <link rel="stylesheet" href="../public/page/static/static.css" />
+    <script src="../public/page/static/static.js"></script>
+    <script src="../public/third/echarts.js"></script>
+    <script src="../public/third/TweenMax.min.js"></script>
+    <script src="../public/third/jquery-3.4.1.js"></script>
+    <script src="../public/third/vue.js"></script>
+    <script src="../public/third/moment.min.js"></script>
+    <script src="../public/third/snowflakes.min.js"></script>
+    <script src="../public/common.js"></script>
+    <!-- <script src="../public/iconfont.js"></script> -->
 
-  <link rel="stylesheet" href="../public/css/iconfont.css" />
-  <link rel="stylesheet" href="../public/page/static/static.css" />
-  <script src="../public/page/static/static.js"></script>
-  <script src="../public/third/echarts.js"></script>
-  <script src="../public/third/TweenMax.min.js"></script>
-  <script src="../public/third/jquery-3.4.1.js"></script>
-  <script src="../public/third/vue.js"></script>
-  <script src="../public/third/moment.min.js"></script>
-  <script src="../public/third/snowflakes.min.js"></script>
-  <script src="../public/common.js"></script>
-  <!-- <script src="../public/iconfont.js"></script> -->
-  <style>
-    .commonicon {
-      font-size: 2em;
-    }
-  </style>
-</head>
+    <!-- 引入element样式 -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+    />
 
-<body>
-  <div class="container flexCenter" id="app">
-    <div id="loginContent" class="mBorder flexCenter" v-if="username===null">
-      <div id="usernamediv" class="flexCenter  mBorder">
-        <input type="text" id="usernameinput" class="mFont" v-model="loginName" placeholder="USERNAME" />
+    <style>
+      .commonicon {
+        font-size: 2em;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container flexCenter" id="app">
+      <div id="loginContent" class="mBorder flexCenter" v-if="username===null">
+        <div id="usernamediv" class="flexCenter  mBorder">
+          <input
+            type="text"
+            id="usernameinput"
+            class="mFont"
+            v-model="loginName"
+            placeholder="USERNAME"
+          />
+        </div>
+
+        <div
+          id="loginbutton"
+          class="flexCenter mFont mBorder"
+          v-on:click="loginclick"
+        >
+          ENTER
+        </div>
       </div>
+      <div id="realContent" class="flexCenter" v-else>
+        <div id="realHead" class="flexCenter mFont mBorder">
+          {{ username }}
+        </div>
 
-      <div id="loginbutton" class="flexCenter mFont mBorder" v-on:click="loginclick">
-        ENTER
+        <div
+          id="realCenter"
+          class="flexCenter mFont mBorder"
+          v-bind:style="{height: animate.chartDivHeight+'%'}"
+          v-on:click="openCharts"
+        >
+          <transition name="centerAnima">
+            <div id="chartsDiv" v-show="operateType=='charts'"></div>
+          </transition>
+          <transition name="commoniconAnima">
+            <span
+              class="commonicon iconfont icon-arrow-circle-o-top1"
+              v-show="operateType!='charts'"
+            ></span>
+          </transition>
+        </div>
+
+        <div
+          id="realFooter"
+          class="flexCenter mFont mBorder"
+          v-bind:style="{height: (animate.SumDivHeight-animate.chartDivHeight)+'%'}"
+          v-on:click="openAdd"
+        >
+          <transition name="centerAnima">
+            <div id="addDiv" class="flexCenter" v-show="operateType=='add'">
+              <div id="bodyTimeDiv" class="flexCenter mBorder">
+                <el-date-picker
+                  id="addDatePicker"
+                  v-model="addDate"
+                  type="date"
+                  placeholder="DATE"
+                  clearable="false"
+                >
+                </el-date-picker>
+                <el-time-select
+                  v-model="addTime"
+                  :picker-options="{
+                  start: '05:00',
+                  step: '02:00',
+                  end: '23:00'
+                  }"
+                  placeholder="TIME"
+                  clearable="false"
+                >
+                </el-time-select>
+              </div>
+              <div id="addWeightDiv" class="flexCenter mBorder"></div>
+              <div id="addButtonDiv" class="flexCenter mBorder"></div>
+            </div>
+          </transition>
+          <transition name="commoniconAnima">
+            <span
+              class="commonicon iconfont icon-arrow-circle-o-top"
+              v-show="operateType!='add'"
+            ></span>
+          </transition>
+        </div>
       </div>
     </div>
-    <div id="realContent" class="flexCenter" v-show="username!=null">
-      <div id="realHead" class="flexCenter mFont mBorder">
-        {{ username }}
-      </div>
-
-      <div id="realCenter" class="flexCenter mFont mBorder" v-bind:style="{height: animate.chartDivHeight+'%'}"
-        v-on:click="openCharts">
-        <transition name="centerAnima">
-          <div id="chartsDiv" class="mBorder" v-show="operateType=='charts'">
-
-          </div>
-        </transition>
-        <transition name="commoniconAnima">
-          <span class="commonicon iconfont icon-arrow-circle-o-top1" v-show="operateType!='charts'"></span>
-        </transition>
-      </div>
-
-
-
-      <div id="realFooter" class="flexCenter mFont mBorder"
-        v-bind:style="{height: (animate.SumDivHeight-animate.chartDivHeight)+'%'}" v-on:click="openAdd">
-        <transition name="commoniconAnima">
-          <span class="commonicon iconfont icon-arrow-circle-o-top" v-show="operateType!='add'"></span>
-        </transition>
-
-      </div>
-    </div>
-    <div id="messgeContent" class="flexCenter mFont mBorder" v-show="messgeShow">
-      <span class="iconfont " v-bind:class="messgeIcon" id="messageicon" v-bind:style="{color:messgeColor}"
-        v-if="false"></span>
-
-      <p>{{ messgeContent }}</p>
-    </div>
-  </div>
+  </body>
+  <!-- 引入element组件库 -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
   <script>
     var sf = new Snowflakes({
       color: '#ffffff',
@@ -88,46 +139,49 @@
       el: '#app',
       data: {
         loginName: 'shanmulinxi',
-        messgeShow: false,
-        messgeContent: 'content',
-        messgeIcon: 'icon-cuowu1',
-        messgeColor: 'red',
-        username: null,
-        operateType: 'charts',
+        username: 'test',
+        operateType: 'add', //add//charts
+        chartdata: [],
         animate: {
-          chartDivHeight: 64,
-          SumDivHeight: 74,
-        }
-
+          chartDivHeight: 10,
+          SumDivHeight: 74
+        },
+        addDate: moment().format('YYYY-MM-DD'),
+        addTime: moment().format('HH:mm'),
+        addWeight: '',
+        weightUnitKey: 0,
+        weightUnitList: [
+          { key: 0, title: 'KG', ratio: 1000 },
+          { key: 1, title: '斤', ratio: 500 },
+          { key: 2, title: 'G', ratio: 1 }
+        ]
+      },
+      watch: {
+        // 如果 `username` 发生改变，这个函数就会运行
+        username: function(newValue, oldVlue) {}
       },
       methods: {
-        openCharts: function () {
+        test: function() {
+          console.log('test')
+        },
+        openCharts: function() {
           if (this.operateType != 'charts') {
             this.operateType = 'charts'
             TweenLite.to(this.animate, 0.7, {
               chartDivHeight: 64
-            });
+            })
           }
-
         },
-        openAdd: function () {
+        openAdd: function() {
           if (this.operateType != 'add') {
             this.operateType = 'add'
             TweenLite.to(this.animate, 0.7, {
               chartDivHeight: 10
-            });
+            })
           }
+        },
 
-        },
-        messageTo: function (text) {
-          this.messgeContent = text
-          this.messgeShow = true
-          setTimeout(() => {
-            this.messgeShow = false
-            this.messgeContent = ''
-          }, 2500)
-        },
-        loginclick: function () {
+        loginclick: function() {
           $.ajax({
             type: 'POST',
             url: '/auth/signInForUser',
@@ -139,9 +193,12 @@
             headers: gloal['headers'],
             // processData: false,
             success: res => {
-              console.log(res)
-              this.messageTo(res.return_msg)
               if (res.return_code == 200 && res.return_obc) {
+                this.$message({
+                  message: "登录成功啦(〃'▽'〃)",
+                  type: 'success',
+                  center: true
+                })
                 const obc = res.return_obc
                 const userdata = {
                   authorization: obc['authorization'],
@@ -152,47 +209,102 @@
                 gloal['headers']['authorization'] = obc['authorization']
                 localStorage.setItem('authorization', obc['authorization'])
                 localStorage.setItem('username', obc['username'])
-                this.enterContent()
 
+                this.$nextTick(function() {
+                  // 此时已经渲染完成
+                  initChart()
+                  showChartLoading(true)
+                  this.enterContent()
+                })
+              } else {
+                this.$message.error({
+                  message: res.return_msg,
+                  type: 'error',
+                  center: true
+                })
               }
             }
           })
         },
-        enterContent: function () {
+        enterContent: function() {
           $.ajax({
             type: 'POST',
             url: '/bodycenter/searchbody',
             dataType: 'json',
             data: JSON.stringify({
               data: {
-                filter: [{
-                  field: 'bodyTime',
-                  operate: 'between',
-                  value: '2019-10-01',
-                  extra: '2019-10-11'
-                }],
-                order: [{
-                  field: 'bodyTime',
-                  type: 'ASC',
-                }]
+                filter: [
+                  {
+                    field: 'bodyTime',
+                    operate: 'between',
+                    value: '2019-10-01',
+                    extra: '2019-10-11'
+                  }
+                ],
+                order: [
+                  {
+                    field: 'bodyTime',
+                    type: 'ASC'
+                  }
+                ]
               }
             }),
             headers: gloal['headers'],
             success: res => {
               if (res.return_code == 200 && res.return_obc) {
                 const resobc = res.return_obc
-                const chartdata = resobc.map(item => [item.bodyTime, item.weight])
-
-                initChart()
-                setOptionChart(this.username, chartdata)
+                this.chartdata = resobc.map(item => [
+                  item.bodyTime,
+                  (item.weight / 1000).toFixed(1),
+                  item.id
+                ])
+                showChartLoading(false)
+                setOptionChart(this.username, this.chartdata)
               }
             }
           })
         }
-
       }
     })
+    var deleteData = function(id) {
+      for (let i = 0; i < this.app.chartdata.length; i++) {
+        if (this.app.chartdata[i][2] === id) {
+          showChartLoading(true)
+          $.ajax({
+            type: 'POST',
+            url: '/bodycenter/deletebody',
+            dataType: 'json',
+            data: JSON.stringify({
+              data: { id }
+            }),
+            headers: gloal['headers'],
+            success: res => {
+              showChartLoading(false)
+              if (res.return_code == 200 && res.return_obc) {
+                this.app.$message({
+                  message: '删除成功了哟o(´^｀)o',
+                  type: 'success',
+                  center: true
+                })
+                this.app.chartdata.splice(i, 1)
+                setOptionChart(this.app.username, this.app.chartdata)
+              } else {
+                this.app.$message({
+                  message: '竟然删除失败了!(ಥ_ಥ)',
+                  type: 'error',
+                  center: true
+                })
+              }
+            }
+          })
+          return
+        }
+      }
+      this.app.$message({
+        message: '已经删除了(￣▽￣)／',
+        type: 'error',
+        center: true
+      })
+    }
   </script>
-</body>
-
 </html>
