@@ -244,8 +244,8 @@ var showChartLoading = function (bool) {
   if (bool) {
     realChart.showLoading('default', {
       text: 'LOADING',
-      color: '#73a373',
-      textColor: '#000',
+      color: '#FFF',
+      textColor: '#FFF',
       maskColor: 'rgba(255, 255, 255, 0.1)',
       zlevel: 0
     })

@@ -242,6 +242,7 @@
         let bodyTime = this.addDate + ' ' + this.addTime
 
         showChartLoading(true)
+        return
         $.ajax({
           type: 'POST',
           url: '/bodycenter/insertbody',
@@ -373,20 +374,21 @@
               const resobc = res.return_obc
 
               showChartLoading(false)
-              if (capule) {
-                this.capulechartdata = resobc.map(item => [
-                  item.bodyTime,
-                  (item.weight / 1000).toFixed(1),
-                  item.id
-                ])
-                setOptionChart(this.capuleusername, this.capulechartdata)
-              } else {
+              if (!capule) {
                 this.chartdata = resobc.map(item => [
                   item.bodyTime,
                   (item.weight / 1000).toFixed(1),
                   item.id
                 ])
                 setOptionChart(this.username, this.chartdata)
+
+              } else {
+                this.capulechartdata = resobc.map(item => [
+                  item.bodyTime,
+                  (item.weight / 1000).toFixed(1),
+                  item.id
+                ])
+                setOptionChart(this.capuleusername, this.capulechartdata)
               }
 
             }
