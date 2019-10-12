@@ -85,7 +85,7 @@ module.exports = class Base_User extends Base {
       ','
     )} ) VALUES ( ${placeholder.join(',')} )`
 
-    console.log(sqlcommand)
+
     return Mysql.run(sqlcommand, insertDataValues)
   }
 
@@ -158,7 +158,6 @@ module.exports = class Base_User extends Base {
     const sqlcommand = `UPDATE base_user SET ${extercommand.join(
       ','
     )}WHERE id = ?`
-    console.log(sqlcommand, updatelist)
     return Mysql.run(sqlcommand, updatelist)
   }
 
@@ -190,7 +189,6 @@ module.exports = class Base_User extends Base {
     const loginError = user.loginError + 1
     const userid = user.id
     const sqlcommand = `UPDATE base_user SET loginTime = ? , loginError = ? WHERE id = ?`
-    console.log(sqlcommand, [loginTime, loginError, userid])
     return Mysql.run(sqlcommand, [loginTime, loginError, userid])
   }
   /**

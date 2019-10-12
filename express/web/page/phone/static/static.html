@@ -27,7 +27,7 @@
   <script src="../public/third/TweenMax.min.js"></script>
   <script src="../public/third/moment.min.js"></script>
   <script src="../public/third/snowflakes.min.js"></script>
-  <script src="../public/third/echarts.js"></script>
+  <script src="../public/third/echarts.min.js"></script>
 
   <script src="../public/common.js"></script>
   <script src="../public/page/static/static.js"></script>
@@ -36,7 +36,7 @@
 
   <style>
     .commonicon {
-      font-size: 2em;
+      font-size: 2rem;
     }
   </style>
 </head>
@@ -78,28 +78,28 @@
           <div id="addDiv" class="flexCenter" v-show="operateType=='add'">
             <div id="bodyTimeDiv" class="flexCenter mBorder">
               <div class="DateTimePickerDiv flexCenter">
-                <el-date-picker id="addDatePicker" v-model="addDate" type="date" placeholder="DATE"
-                  v-bind:clearable="false" value-format="yyyy-MM-dd" :picker-options="datePickerOptions" />
+                <el-date-picker id="addDatePicker" v-model="addDate" type="date" placeholder="DATE" :editable="false"
+                  :clearable="false" value-format="yyyy-MM-dd" :picker-options="datePickerOptions" />
               </div>
               <div class="DateTimePickerDiv flexCenter">
                 <el-time-select id="addTimePicker" v-model="addTime" :picker-options="{
                     start: '05:00',
                     step: '02:00',
                     end: '23:00'
-                    }" placeholder="TIME" v-bind:clearable="false" />
+                    }" placeholder="TIME" :editable="false" :clearable="false" />
 
               </div>
 
             </div>
             <div id="addWeightDiv" class="flexCenter mBorder">
 
-              <div id="addWeightInputLabel" class="flexCenter ">WEIGHT</div>
+              <div id="addWeightInputLabel" class="flexCenter smFont">WEIGHT</div>
               <div id="addWeightInputDiv" class="flexCenter ">
-                <el-input id="addWeightInput" v-model="addWeight" placeholder="输入体重哟"></el-input>
+                <el-input id="addWeightInput" v-model="addWeight" placeholder="输入体重哟" type="number"></el-input>
               </div>
               <div id="addWeightInputUnit" class="flexCenter">
                 <el-dropdown id="unitDropdown" class="flexCenter" @command="weightUnitChange">
-                  <p class="mFont">/{{weightUnitList[weightUnitKey].title}}</p>
+                  <p class="smFont">/{{weightUnitList[weightUnitKey].title}}</p>
                   <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item v-for="item of weightUnitList" v-bind:key="item.key" v-bind:command="item.key">
                       {{item.title}}</el-dropdown-item>
@@ -126,7 +126,13 @@
 </body>
 
 <script>
-  commonReady()
+  commonReady(() => {
+    const storageName = localStorage.getItem('loginname')
+    if (storageName != null) {
+      this.app.loginName = storageName
+    }
+
+  })
   var gloal = {
     headers: {
       'Content-Type': 'application/json; charset=UTF-8'
@@ -135,7 +141,7 @@
   var app = new Vue({
     el: '#app',
     data: {
-      loginName: 'meiwa',
+      loginName: '',
       username: null,
       capuleusername: null,
       operateType: 'charts', //add//charts
@@ -199,7 +205,8 @@
         if (String(Number(this.addWeight)) == 'NaN') {
           this.$message({
             message: '体重只能输入数字啦',
-            type: 'warning'
+            type: 'warning',
+            center: true
           });
           return false
         }
@@ -207,14 +214,16 @@
         if (weig < 20000 || weig > 200000) {
           this.$message({
             message: '体重只能在20KG到200KG之间啦',
-            type: 'warning'
+            type: 'warning',
+            center: true
           });
           return false
         }
         if (moment(this.addDate).diff(moment()) > 0) {
           this.$message({
             message: '不能选今天之后的时间哟',
-            type: 'warning'
+            type: 'warning',
+            center: true
           });
           return false
         }
@@ -298,7 +307,7 @@
           })
         }
       },
-
+      // 登录点击
       loginclick: function () {
         const loading = this.$loading({
           lock: true,
@@ -333,8 +342,10 @@
               this.username = obc['username']
               gloal['userdata'] = userdata
               gloal['headers']['authorization'] = obc['authorization']
+              //持久化储存
               localStorage.setItem('authorization', obc['authorization'])
               localStorage.setItem('username', obc['username'])
+              localStorage.setItem('loginname', this.loginName)
               const namelist = [this.username]
               if (obc['capuleid'] != null) {
                 this.capuleusername = obc['capuleusername']
@@ -354,7 +365,8 @@
               this.$message.error({
                 message: res.return_msg,
                 type: 'error',
-                center: true
+                center: true,
+                duration: 0
               })
             }
           }

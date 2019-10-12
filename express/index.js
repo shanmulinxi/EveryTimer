@@ -8,10 +8,14 @@ function init() {
   initBodyParser(app_g)
   initModel(app_g)
 
-  var server = app_g.listen(6689, function() {
-    var host = server.address().address
-    var port = server.address().port
-    console.log('应用实例，访问地址为 http://%s:%s', host, port)
+
+  const port = global.config["Debug"] ? 6689 : 80
+
+  var server = app_g.listen(port, function () {
+    // var host = server.address().address
+    // var port = server.address().port
+    // console.log('应用实例，访问地址为 http://%s:%s', host, port)
+    console.log(`应用实例:启动端口号为[${port}]`)
   })
 }
 

@@ -163,5 +163,25 @@ module.exports = {
   UserCenter_changePassword_SQLError: {
     return_code: 21003,
     return_msg: '更新错误'
-  }
+  },
+  NullReqData: {
+    return_code: 90001,
+    return_msg: '没有请求数据'
+  },
+  NoSearchUser: {
+    return_code: 90002,
+    return_msg: '没有找到用户'
+  },
+  OneMoreUser: {
+    return_code: 90003,
+    return_msg: '服务器错误'
+  },
+  UpdateSQLError: {
+    return_code: 90004,
+    return_msg: '服务器错误'
+  },
+  SQLError: {
+    return_code: 90005,
+    return_msg: '服务器错误'
+  },
 }

@@ -77,10 +77,8 @@ module.exports = class BodyCenter extends Control {
       return
     }
 
-    console.log(operateData)
     Base_Body.insertData(operateData)
       .then(result => {
-        console.log(result)
         this.successReturn(res, {
           return_obc: {
             id: result.insertId,
@@ -90,7 +88,6 @@ module.exports = class BodyCenter extends Control {
         return
       })
       .catch(err => {
-        console.log(err)
         this.failReturn(
           res,
           ErrorCode.BodyCenter_Insert_InsertSQL,
@@ -139,12 +136,10 @@ module.exports = class BodyCenter extends Control {
             this.successReturn(res, {})
           })
           .catch(err => {
-            console.log(err)
             this.failReturn(res, ErrorCode.BodyCenter_DeleteBody_SQLERROR)
           })
       })
       .catch(err => {
-        console.log(err)
         this.failReturn(res, ErrorCode.BodyCenter_DeleteBody_SQLERROR)
       })
   }
@@ -214,12 +209,10 @@ module.exports = class BodyCenter extends Control {
             this.successReturn(res, {})
           })
           .catch(err => {
-            console.log(err)
             this.failReturn(res, ErrorCode.BodyCenter_UpdateBody_SQLERROR)
           })
       })
       .catch(err => {
-        console.log(err)
         this.failReturn(res, ErrorCode.BodyCenter_UpdateBody_SQLERROR)
       })
   }
@@ -239,7 +232,11 @@ module.exports = class BodyCenter extends Control {
       return
     }
 
-    let { capule, filter, order } = reqData
+    let {
+      capule,
+      filter,
+      order
+    } = reqData
     if (!order) {
       order = null
     }
@@ -278,7 +275,6 @@ module.exports = class BodyCenter extends Control {
         })
       })
       .catch(err => {
-        console.log(err)
         this.failReturn(res, ErrorCode.BodyCenter_SearchBody_SQLERROR)
         return
       })

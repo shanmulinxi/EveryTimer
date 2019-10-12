@@ -7,8 +7,8 @@ function commontest() {
   c.log('commontest')
 }
 
-function commonReady(params) {
-  $(document).ready(function() {
+function commonReady(fun) {
+  $(document).ready(function () {
     // 在DOM加载完成时运行的代码
     var sf = new Snowflakes({
       color: '#FFFFFF',
@@ -16,6 +16,7 @@ function commonReady(params) {
       minOpacity: 0.2,
       maxOpacity: 0.6
     })
+    fun()
   })
 }
 

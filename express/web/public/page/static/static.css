@@ -96,13 +96,13 @@
 
 #addDatePicker {
   text-align: center;
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: bold;
 }
 
 #addTimePicker {
   text-align: center;
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: bold;
 }
 
@@ -116,7 +116,7 @@
 
 #addWeightInput {
   text-align: center;
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: bold;
 }
 
@@ -175,7 +175,7 @@
 .centerAnima-leave-to
 
 /* .fade-leave-active below version 2.1.8 */
- {
+  {
   transform: scale(1, 0);
   opacity: 0;
 }
@@ -184,7 +184,7 @@
 .centerAnima-leave
 
 /* .fade-leave-active below version 2.1.8 */
- {
+  {
   opacity: 1;
   transform: scale(1, 1);
 }
@@ -201,4 +201,13 @@
 /* element 覆盖样式 */
 .el-loading-spinner .el-loading-text {
   font-size: 2rem;
+}
+
+.el-message {
+  min-width: 90%;
+}
+
+.el-message-box {
+  width: 100%;
+
 }
