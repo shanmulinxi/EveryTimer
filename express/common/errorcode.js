@@ -1,4 +1,8 @@
 module.exports = {
+  LoginError: {
+    return_code: 10000,
+    return_msg: '校验用户失败'
+  },
   BodyCenter_Insert_NullReqData: {
     return_code: 30000,
     return_msg: '没有请求数据'

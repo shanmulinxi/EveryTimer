@@ -45,7 +45,8 @@ module.exports = class Control {
    *     }
    */
   failReturn(
-    res, {
+    res,
+    {
       return_obc = {},
       return_msg = 'FAILURE',
       return_state = false,
@@ -78,14 +79,14 @@ module.exports = class Control {
    *     }
    */
   successReturn(
-    res, {
+    res,
+    {
       return_obc = {},
       return_msg = 'SUCCESS',
       return_state = true,
       return_code = 200
     }
   ) {
-
     res.json({
       return_state,
       return_code,
@@ -106,14 +107,14 @@ module.exports = class Control {
 
   static verifyToken(token) {
     let secretOrPrivateKey = global.config.TokenKey // 这是加密的key（密钥）
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       Jwt.verify(token, secretOrPrivateKey, (err, decode) => {
         if (err) {
           //  时间失效的时候 || 伪造的token
-          console.log(err)
           reject(err)
         } else {
-          const filter = [{
+          const filter = [
+            {
               field: 'id',
               operate: 'equal',
               value: decode['id']
@@ -130,11 +131,10 @@ module.exports = class Control {
             }
           ]
           Base_User.getDataFormFilter({
-              filter,
-              pagesize: 1
-            })
+            filter,
+            pagesize: 1
+          })
             .then(userlist => {
-              console.log(userlist)
               if (userlist.length == 1) {
                 resolve(userlist[0])
               } else {
@@ -142,7 +142,6 @@ module.exports = class Control {
               }
             })
             .catch(error => {
-              console.log(error)
               reject(error)
             })
         }
