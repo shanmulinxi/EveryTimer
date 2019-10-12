@@ -2,6 +2,7 @@ html {
   font-size: 15px;
   height: 100%;
   width: 100%;
+  background: rgba(51, 51, 51, 1);
 }
 
 body {
@@ -43,6 +44,12 @@ input {
 
 .mFont {
   font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.mbFont {
+  font-size: 1.7rem;
   font-weight: bold;
   color: #fff;
 }

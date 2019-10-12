@@ -27,9 +27,8 @@ module.exports = class BodyCenter extends Control {
         return
       })
       .catch(err => {
-        Base_Body.test()
-        console.log(err)
-        res.json('ERROR')
+        this.failReturn(res, ErrorCode.LoginError)
+        return
       })
     //自定义拦截器
   }
@@ -77,7 +76,6 @@ module.exports = class BodyCenter extends Control {
       this.failReturn(res, ErrorCode.BodyCenter_Insert_SetUserId)
       return
     }
-
 
     console.log(operateData)
     Base_Body.insertData(operateData)
@@ -241,11 +239,7 @@ module.exports = class BodyCenter extends Control {
       return
     }
 
-    let {
-      capule,
-      filter,
-      order
-    } = reqData
+    let { capule, filter, order } = reqData
     if (!order) {
       order = null
     }

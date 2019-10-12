@@ -24,7 +24,6 @@ module.exports = class UserCenter extends Control {
         return
       })
       .catch(err => {
-        console.log(err)
         res.json('ERROR')
       })
   }

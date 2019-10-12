@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>EveryTimer</title>
+
+    <!-- JQuery -->
+    <script src="../public/third/jquery-3.4.1.min.js"></script>
+    <script src="../public/third/vue.min.js"></script>
+    <!-- 引入element样式 -->
+
+    <link
+      rel="stylesheet"
+      href="../public/third/elementStyle/theme/index.css"
+    />
+    <!-- 引入element组件库 -->
+    <script src="../public/third/element-ui.js"></script>
+
+    <link rel="stylesheet" href="../public/css/iconfont.css" />
+    <link rel="stylesheet" href="../public/css/style.css" />
+
+    <script src="../public/third/TweenMax.min.js"></script>
+    <script src="../public/third/moment.min.js"></script>
+    <script src="../public/third/snowflakes.min.js"></script>
+
+    <script src="../public/common.js"></script>
+
+    <style>
+      .commonicon {
+        font-size: 5em;
+      }
+      .icondiv {
+        background-color: #ffffff;
+        width: 6em;
+        height: 6em;
+        border-radius: 3rem;
+      }
+      #centerdiv {
+        height: 50%;
+        width: 50%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container flexCenter" id="app">
+      <div id="centerdiv" class="flexCenter mBorder">
+        <div class="icondiv flexCenter">
+          <span class="commonicon iconfont icon-xiongmaobaohu"></span>
+        </div>
+        <div class="mbFont">{{ remind }}</div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    commonReady()
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        remind: '....施工中....'
+      },
+      watch: {},
+      created: function() {
+        this.remindAnima()
+      },
+      methods: {
+        remindAnima: function() {
+          const insert = this.remind[this.remind.length - 1]
+
+          this.remind = insert + this.remind.slice(0, this.remind.length - 1)
+          setTimeout(() => {
+            this.remindAnima()
+          }, 300)
+        }
+      }
+    })
+  </script>
+</html>

@@ -11,7 +11,6 @@ function init() {
   var server = app_g.listen(6689, function() {
     var host = server.address().address
     var port = server.address().port
-
     console.log('应用实例，访问地址为 http://%s:%s', host, port)
   })
 }
@@ -38,6 +37,7 @@ function initModel(app) {
   app.use('/favicon.ico', (req, res) => {
     res.sendFile(__dirname + '/web/public/favicon.ico')
   })
+
   //设置静态托管路径
   app.use('/public', express.static(__dirname + '/web/public'))
 
@@ -46,6 +46,10 @@ function initModel(app) {
 
   const staticPage = require('./web/index')
   new staticPage(app)
+  app.get('/', (req, res) => {
+    res.redirect('/page')
+  })
+
   const Auth = require('./control/Auth')
   new Auth(app)
   const UserCenter = require('./control/UserCenter')

@@ -3,7 +3,7 @@ const Control = require('../class/Control')
 
 const ControlName = 'page'
 
-const PagePath = __dirname + '/page'
+const PagePath = __dirname + '/page/'
 /**
  * 静态页面控制器
  */
@@ -21,11 +21,12 @@ module.exports = class staticPage extends Control {
       var deviceAgent = req.headers['user-agent'].toLowerCase()
       var agentID = deviceAgent.match(/(iphone|ipod|ipad|android)/)
       if (agentID) {
-        console.log('手机访问')
+        // console.log('Mobile phone access')
+        res.sendFile(PagePath + 'phone/static/static.html')
       } else {
-        console.log('电脑访问')
+        // console.log('PC access')
+        res.sendFile(PagePath + 'pc/construction/index.html')
       }
-      res.sendFile(PagePath + '/static/static.html')
     })
     _router.get('/index', (req, res) => {
       res.sendFile(PagePath + '/index.html')
