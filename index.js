@@ -21,6 +21,8 @@ function initDebug(config) {
 function run() {
 
     console.log('RUNING SERVER')
+
+
     server.start();
 }
 // var router = require("./router");

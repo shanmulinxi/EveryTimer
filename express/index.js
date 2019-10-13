@@ -1,4 +1,5 @@
 const express = require('express')
+const fs = require("fs");
 
 function init() {
   const app_g = express()
@@ -7,7 +8,7 @@ function init() {
   initCookieParser(app_g)
   initBodyParser(app_g)
   initModel(app_g)
-
+  initErrorHandler(app_g)
 
   const port = global.config["Debug"] ? 6689 : 80
 
@@ -77,5 +78,51 @@ function cors(app) {
   //模块设置
   const cors = require('cors')
   app.use(cors())
+}
+
+function initErrorHandler(app) {
+  const logErrors = function (err, req, res, next) {
+    console.error('logErrors', err.stack)
+    const now = new Date()
+    const errordate = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`
+    const errortime = `${now.getHours()}:${now.getMinutes()+1}:${now.getSeconds()}`
+    const errorout = `time:  ${errordate} ${errortime}\n` +
+      `ips: ${JSON.stringify(req.ips)}\n` +
+      `headers: ${JSON.stringify(req.headers)}\n` +
+      `protocol: ${req.protocol} \t\t originalUrl: ${req.originalUrl} \t\t params: ${JSON.stringify(req.params)} \t\t method: ${req.method}\n` +
+      `body: ${JSON.stringify(req.body)}\n` +
+      `fresh: ${req.fresh} \t\t xhr: ${req.xhr}\n ` +
+      `errorinfo:\n` +
+      `${JSON.stringify(err.stack)}\n\n`
+    fs.writeFile(`Log/Error/${errordate}.txt`, errorout, {
+      'flag': 'a'
+    }, function (err) {
+      if (err) {
+        throw err;
+      }
+    })
+    next(err)
+  }
+
+  const clientErrorHandler = function (err, req, res, next) {
+    if (req.xhr) {
+      res.status(500).send({
+        error: 'Something failed!'
+      })
+    } else {
+      next(err)
+    }
+  }
+
+  const errorHandler = function (err, req, res, next) {
+    res.status(500)
+    res.render('error', {
+      error: err
+    })
+  }
+
+  app.use(logErrors)
+  app.use(clientErrorHandler)
+  app.use(errorHandler)
 }
 exports.init = init
