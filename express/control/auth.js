@@ -38,9 +38,10 @@ module.exports = class Auth extends Control {
       this.failReturn(res, 'NullReqData')
       return
     }
-    const { loginName } = reqData
-    const filter = [
-      {
+    const {
+      loginName
+    } = reqData
+    const filter = [{
         field: 'loginName',
         operate: 'equal',
         value: loginName
@@ -52,9 +53,9 @@ module.exports = class Auth extends Control {
       }
     ]
     Base_User.getDataFormFilter({
-      filter,
-      pagesize: 2
-    })
+        filter,
+        pagesize: 2
+      })
       .then(userR => {
         if (userR.length == 0) {
           this.failReturn(res, 'NoSearchUser')
@@ -71,42 +72,13 @@ module.exports = class Auth extends Control {
         //所有校验完成，返回结果
         Base_User.updateUser(userdata, ['authorization', 'loginTime'])
           .then(updateR => {
-            if (userdata['capuleid'] == null) {
-              this.successReturn(res, {
-                return_obc: {
-                  authorization: userdata['authorization'],
-                  username: userdata['userName'],
-                  capuleid: userdata['capuleid']
-                }
-              })
-              return
-            } else {
-              Base_User.getDataFormFilter({
-                filter: [
-                  {
-                    field: 'id',
-                    operate: 'equal',
-                    value: userdata['capuleid']
-                  },
-                  {
-                    field: 'isDelete',
-                    operate: 'equal',
-                    value: 'false'
-                  }
-                ],
-                pagesize: 1
-              }).then(capuleuser => {
-                this.successReturn(res, {
-                  return_obc: {
-                    authorization: userdata['authorization'],
-                    username: userdata['userName'],
-                    capuleid: userdata['capuleid'],
-                    capuleusername: capuleuser[0]['userName']
-                  }
-                })
-                return
-              })
-            }
+            this.successReturn(res, {
+              return_obc: {
+                authorization: userdata['authorization'],
+                username: userdata['userName']
+              }
+            })
+            return
           })
           .catch(err => {
             this.failReturn(res, 'UpdateSQLError')
@@ -125,13 +97,15 @@ module.exports = class Auth extends Control {
       this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NullReqData)
       return
     }
-    const { birthday, smallName } = reqData
+    const {
+      birthday,
+      smallName
+    } = reqData
     if (!birthday || !smallName) {
       this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_ParamError)
       return
     }
-    const filter = [
-      {
+    const filter = [{
         field: 'smallName',
         operate: 'equal',
         value: smallName
@@ -143,9 +117,9 @@ module.exports = class Auth extends Control {
       }
     ]
     Base_User.getDataFormFilter({
-      filter,
-      pagesize: 2
-    })
+        filter,
+        pagesize: 2
+      })
       .then(userR => {
         if (userR.length == 0) {
           this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NoSearchUser)
@@ -227,10 +201,10 @@ module.exports = class Auth extends Control {
           userdata['loginTime'] = Moment().format('YYYY-MM-DD HH:mm:ss')
           //所有校验完成，返回结果
           Base_User.updateUser(userdata, [
-            'authorization',
-            'loginTime',
-            'loginError'
-          ])
+              'authorization',
+              'loginTime',
+              'loginError'
+            ])
             .then(updateR => {
               this.successReturn(res, {
                 return_obc: {

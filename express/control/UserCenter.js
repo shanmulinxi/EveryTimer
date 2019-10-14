@@ -53,10 +53,11 @@ module.exports = class UserCenter extends Control {
       loginTime: 0,
       loginError: 0,
       // capuleid: null,
-      capuleName: null,
+      // capule: null,
       smallName: null,
       birthday: null
     }
+
     const keylist = Object.keys(info)
     for (let i = 0; i < keylist.length; i++) {
       info[keylist[i]] = reqUser[keylist[i]]
@@ -65,17 +66,29 @@ module.exports = class UserCenter extends Control {
     const capuleid = reqUser['capuleid']
     if (capuleid != null) {
       Base_User.getDataFormId(capuleid)
-        .then(res => {
-          if (!res['isDelete']) {
-            info['capuleName'] = res[0]['smallName']
+        .then(result => {
+          if (!result[0]['isDelete']) {
+            const capule = {}
+            for (let i = 0; i < keylist.length; i++) {
+              capule[keylist[i]] = result[0][keylist[i]]
+            }
+            info['capule'] = capule
+          } else {
+            info['capule'] = null
           }
-          this.successReturn(res, { return_obc: info })
+          this.successReturn(res, {
+            return_obc: info
+          })
         })
         .catch(err => {
+          console.log(err)
           this.failReturn(res, 'SQLError')
         })
     } else {
-      this.successReturn(res, { return_obc: info })
+      info['capule'] = null
+      this.successReturn(res, {
+        return_obc: info
+      })
     }
   }
   changePassword(req, res) {
@@ -90,9 +103,13 @@ module.exports = class UserCenter extends Control {
       return
     }
 
-    let { password } = reqData
+    let {
+      password
+    } = reqData
 
-    if (!Base_User.verifyData({ password }, ['password'])) {
+    if (!Base_User.verifyData({
+        password
+      }, ['password'])) {
       this.failReturn(res, ErrorCode.UserCenter_changePassword_VerifyData)
       return
     }
@@ -100,7 +117,11 @@ module.exports = class UserCenter extends Control {
     password = Base_User.passwordAddSalt(password)
     password = Base_User.creatMD5(password)
 
-    const filter = [{ field: 'id', operate: 'equal', value: reqUser['id'] }]
+    const filter = [{
+      field: 'id',
+      operate: 'equal',
+      value: reqUser['id']
+    }]
     const updateObc = {
       password,
       authorization: null,

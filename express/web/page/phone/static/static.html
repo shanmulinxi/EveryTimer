@@ -135,16 +135,7 @@
     if (storageAuthori != null) {
       gloal['headers']['authorization'] = storageAuthori
 
-      $.ajax({
-          type: 'GET',
-          url: '/usercenter/getInfo',
-          dataType: 'json',
-          data: {},
-          headers: gloal['headers'],
-          success: res => {
-            
-          }
-        })
+
     }
   })
   var gloal = {
@@ -157,7 +148,7 @@
     data: {
       loginName: '',
       username: null,
-      capuleusername: null,
+      capulename: null,
       operateType: 'charts', //add//charts
       chartdata: [],
       capulechartdata: [],
@@ -349,31 +340,15 @@
                 center: true
               })
               const obc = res.return_obc
-              const userdata = {
-                authorization: obc['authorization'],
-                username: obc['username']
-              }
               this.username = obc['username']
-              gloal['userdata'] = userdata
               gloal['headers']['authorization'] = obc['authorization']
               //持久化储存
               localStorage.setItem('authorization', obc['authorization'])
               localStorage.setItem('username', obc['username'])
               localStorage.setItem('loginname', this.loginName)
-              const namelist = [this.username]
-              if (obc['capuleid'] != null) {
-                this.capuleusername = obc['capuleusername']
-                namelist.push(this.capuleusername)
-              }
-              this.$nextTick(function () {
-                // 此时已经渲染完成
-                initChart(namelist)
-                showChartLoading(true)
 
-                this.searchData()
-                if (obc['capuleid'] != null) {
-                  this.searchData(true)
-                }
+              this.$nextTick(() => {
+                this.enterHome()
               })
             } else {
               this.$message.error({
@@ -382,6 +357,40 @@
                 center: true,
               })
             }
+          }
+        })
+      },
+      //进入页面调用
+      enterHome: function () {
+        $.ajax({
+          type: 'GET',
+          url: '/usercenter/getInfo',
+          dataType: 'json',
+          headers: gloal['headers'],
+          success: infores => {
+            const obc = infores.return_obc
+            if (infores.return_code == 200 && obc) {
+
+              let ownUser = obc.smallName || obc.username
+              const namelist = [ownUser]
+              let capUser = null
+              if (obc.capule) {
+
+                const capUser = obc.capule.smallName || obc.capule.userName
+                console.log(capUser)
+                this.capulename = capUser
+                namelist.push(capUser)
+              }
+              console.log(namelist)
+              initChart(namelist)
+              showChartLoading(true)
+              this.searchData()
+              if (obc.capule) {
+                this.searchData(true)
+              }
+            }
+
+
           }
         })
       },
@@ -425,7 +434,7 @@
                   (item.weight / 1000).toFixed(1),
                   item.id
                 ])
-                setOptionChart(this.capuleusername, this.capulechartdata)
+                setOptionChart(this.capulename, this.capulechartdata)
               }
 
             }

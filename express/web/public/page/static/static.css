@@ -91,7 +91,7 @@
 }
 
 .DateTimePickerDiv {
-  width: 45%;
+  width: 47%;
 }
 
 #addDatePicker {
@@ -210,4 +210,12 @@
 .el-message-box {
   width: 99%;
 
+}
+
+.el-input--suffix .el-input__inner {
+  padding-right: 0;
+}
+
+.el-input__icon {
+  font-size: 1.1rem;
 }
