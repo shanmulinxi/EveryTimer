@@ -2,6 +2,7 @@ const express = require('express')
 // const router = express.Router()
 const Jwt = require('jsonwebtoken') //用来生成token
 const Base_User = require('../../model/Base_User')
+const ErrorCode = require('../common/errorcode')
 /**
  * 自定义 http控制器
  */
@@ -44,55 +45,49 @@ module.exports = class Control {
    *       return_code = 500
    *     }
    */
-  failReturn(
-    res,
-    {
-      return_obc = {},
-      return_msg = 'FAILURE',
-      return_state = false,
-      return_code = 500
-    },
-    message
-  ) {
-    console.log('failReturn', {
-      return_state,
-      return_code,
-      return_msg,
-      return_obc
-    })
-    res.json({
-      return_state,
-      return_code,
-      return_msg: message || return_msg,
-      return_obc
-    })
+  failReturn(res, errorcode = 'Error', message = null) {
+    let error_obc = {}
+    if (typeof errorcode === 'string') {
+      error_obc = ErrorCode[errorcode]
+    } else {
+      error_obc = errorcode
+    }
+
+    let obc = {
+      return_obc: {},
+      return_msg: 'FAILURE',
+      return_state: false,
+      return_code: 500
+    }
+    if (error_obc) {
+      Object.assign(obc, error_obc)
+    }
+    if (message) {
+      obc.return_msg = message
+    }
+    res.json(obc)
   }
+
   /**
    *成功的返回
    *
    * @param {*} res
    * @param {*} {
-   *       return_obc = {},
-   *       return_msg = 'FAILURE',
-   *       return_state = false,
-   *       return_code = 500
+   *       return_obc: {},
+   *       return_msg: 'SUCCESS',
+   *       return_state: true,
+   *       return_code: 200
    *     }
    */
-  successReturn(
-    res,
-    {
-      return_obc = {},
-      return_msg = 'SUCCESS',
-      return_state = true,
-      return_code = 200
+  successReturn(res, returnObject = {}) {
+    let obc = {
+      return_obc: {},
+      return_msg: 'SUCCESS',
+      return_state: true,
+      return_code: 200
     }
-  ) {
-    res.json({
-      return_state,
-      return_code,
-      return_msg,
-      return_obc
-    })
+    Object.assign(obc, returnObject)
+    res.json(obc)
   }
 
   checkCookies(req) {
@@ -146,28 +141,6 @@ module.exports = class Control {
             })
         }
       })
-    })
-  }
-
-  logErrors(err, req, res, next) {
-    console.error('logErrors', err.stack)
-    next(err)
-  }
-
-  clientErrorHandler(err, req, res, next) {
-    if (req.xhr) {
-      res.status(500).send({
-        error: 'Something failed!'
-      })
-    } else {
-      next(err)
-    }
-  }
-
-  errorHandler(err, req, res, next) {
-    res.status(500)
-    res.render('error', {
-      error: err
     })
   }
 }

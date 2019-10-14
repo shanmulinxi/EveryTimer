@@ -1,4 +1,7 @@
 module.exports = {
+  Error: {
+    return_msg: '服务器发生错误'
+  },
   LoginError: {
     return_code: 10000,
     return_msg: '校验用户失败'
@@ -183,5 +186,5 @@ module.exports = {
   SQLError: {
     return_code: 90005,
     return_msg: '服务器错误'
-  },
+  }
 }

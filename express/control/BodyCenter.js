@@ -27,7 +27,7 @@ module.exports = class BodyCenter extends Control {
         return
       })
       .catch(err => {
-        this.failReturn(res, ErrorCode.LoginError)
+        this.failReturn(res, 'LoginError')
         return
       })
     //自定义拦截器
@@ -232,52 +232,49 @@ module.exports = class BodyCenter extends Control {
       return
     }
 
-    let {
-      capule,
-      filter,
-      order
-    } = reqData
+    let { capule, filter, order } = reqData
     if (!order) {
       order = null
     }
+    // console.log(reqUser)
     let searchUserId = reqUser['id']
-    Base_User.getDataFormId(reqUser['id'])
-      .then(userR => {
-        if (capule === true) {
-          searchUserId = userR[0]['capuleid']
-          if (searchUserId === null) {
-            this.failReturn(res, ErrorCode.BodyCenter_SearchBody_NoCapule)
-            return
-          }
-        }
 
-        // 设置userid  只有本人或联结对象
-        // 设置isDelete 默认获取未删除的
-        filter.push({
-          field: 'userid',
-          operate: 'equal',
-          value: searchUserId
-        })
-        filter.push({
-          field: 'isDelete',
-          operate: 'equal',
-          value: 'false'
-        })
+    if (capule === true) {
+      searchUserId = reqUser['capuleid']
+      if (searchUserId === null) {
+        this.failReturn(res, ErrorCode.BodyCenter_SearchBody_NoCapule)
+        return
+      }
+    }
 
-        Base_Body.getDataFormFilter({
-          filter,
-          order
-        }).then(result => {
-          this.successReturn(res, {
-            return_obc: result
-          })
-          return
+    // 设置userid  只有本人或联结对象
+    // 设置isDelete 默认获取未删除的
+    filter.push({
+      field: 'userid',
+      operate: 'equal',
+      value: searchUserId
+    })
+    filter.push({
+      field: 'isDelete',
+      operate: 'equal',
+      value: 'false'
+    })
+
+    Base_Body.getDataFormFilter({
+      filter,
+      order
+    })
+      .then(result => {
+        this.successReturn(res, {
+          return_obc: result
         })
+        return
       })
       .catch(err => {
         this.failReturn(res, ErrorCode.BodyCenter_SearchBody_SQLERROR)
         return
       })
+
     return
   }
 }

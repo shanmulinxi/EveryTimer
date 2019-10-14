@@ -131,7 +131,21 @@
     if (storageName != null) {
       this.app.loginName = storageName
     }
+    const storageAuthori = localStorage.getItem('authorization')
+    if (storageAuthori != null) {
+      gloal['headers']['authorization'] = storageAuthori
 
+      $.ajax({
+          type: 'GET',
+          url: '/usercenter/getInfo',
+          dataType: 'json',
+          data: {},
+          headers: gloal['headers'],
+          success: res => {
+            
+          }
+        })
+    }
   })
   var gloal = {
     headers: {

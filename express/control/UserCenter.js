@@ -24,18 +24,60 @@ module.exports = class UserCenter extends Control {
         return
       })
       .catch(err => {
-        res.json('ERROR')
+        this.failReturn(res, 'LoginError')
       })
   }
 
   initRouter() {
     const _router = super.initRouter()
+    _router.get('/getInfo', (req, res) => {
+      this.getUserInfo(req, res)
+    })
     _router.post('/changePassword', (req, res) => {
       this.changePassword(req, res)
     })
     return _router
   }
 
+  getUserInfo(req, res) {
+    const reqUser = req.body.user || null
+    if (!reqUser) {
+      this.failReturn(res, 'NullReqData', '?没有请求的数据呀?')
+      return
+    }
+    const info = {
+      loginName: null,
+      userName: null,
+      message: null,
+      remark: null,
+      loginTime: 0,
+      loginError: 0,
+      // capuleid: null,
+      capuleName: null,
+      smallName: null,
+      birthday: null
+    }
+    const keylist = Object.keys(info)
+    for (let i = 0; i < keylist.length; i++) {
+      info[keylist[i]] = reqUser[keylist[i]]
+    }
+
+    const capuleid = reqUser['capuleid']
+    if (capuleid != null) {
+      Base_User.getDataFormId(capuleid)
+        .then(res => {
+          if (!res['isDelete']) {
+            info['capuleName'] = res[0]['smallName']
+          }
+          this.successReturn(res, { return_obc: info })
+        })
+        .catch(err => {
+          this.failReturn(res, 'SQLError')
+        })
+    } else {
+      this.successReturn(res, { return_obc: info })
+    }
+  }
   changePassword(req, res) {
     const reqData = req.body.data || null
     const reqUser = req.body.user || null

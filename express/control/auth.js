@@ -32,17 +32,15 @@ module.exports = class Auth extends Control {
     return _router
   }
   /** 简易登录 */
-  //TODO 错误信息修改
   signInForUser(req, res) {
     const reqData = req.body || null
     if (!reqData) {
-      this.failReturn(res, ErrorCode.NullReqData)
+      this.failReturn(res, 'NullReqData')
       return
     }
-    const {
-      loginName
-    } = reqData
-    const filter = [{
+    const { loginName } = reqData
+    const filter = [
+      {
         field: 'loginName',
         operate: 'equal',
         value: loginName
@@ -54,15 +52,15 @@ module.exports = class Auth extends Control {
       }
     ]
     Base_User.getDataFormFilter({
-        filter,
-        pagesize: 2
-      })
-      .then((userR) => {
+      filter,
+      pagesize: 2
+    })
+      .then(userR => {
         if (userR.length == 0) {
-          this.failReturn(res, ErrorCode.NoSearchUser)
+          this.failReturn(res, 'NoSearchUser')
           return
         } else if (userR.length >= 2) {
-          this.failReturn(res, ErrorCode.OneMoreUser)
+          this.failReturn(res, 'OneMoreUser')
           return
         }
         //找到唯一用户
@@ -84,7 +82,8 @@ module.exports = class Auth extends Control {
               return
             } else {
               Base_User.getDataFormFilter({
-                filter: [{
+                filter: [
+                  {
                     field: 'id',
                     operate: 'equal',
                     value: userdata['capuleid']
@@ -110,12 +109,12 @@ module.exports = class Auth extends Control {
             }
           })
           .catch(err => {
-            this.failReturn(res, ErrorCode.UpdateSQLError)
+            this.failReturn(res, 'UpdateSQLError')
             return
           })
       })
       .catch(err => {
-        this.failReturn(res, ErrorCode.SQLError)
+        this.failReturn(res, 'SQLError')
         return
       })
   }
@@ -126,15 +125,13 @@ module.exports = class Auth extends Control {
       this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NullReqData)
       return
     }
-    const {
-      birthday,
-      smallName
-    } = reqData
+    const { birthday, smallName } = reqData
     if (!birthday || !smallName) {
       this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_ParamError)
       return
     }
-    const filter = [{
+    const filter = [
+      {
         field: 'smallName',
         operate: 'equal',
         value: smallName
@@ -146,9 +143,9 @@ module.exports = class Auth extends Control {
       }
     ]
     Base_User.getDataFormFilter({
-        filter,
-        pagesize: 2
-      })
+      filter,
+      pagesize: 2
+    })
       .then(userR => {
         if (userR.length == 0) {
           this.failReturn(res, ErrorCode.Auth_SignInForNameBirth_NoSearchUser)
@@ -230,10 +227,10 @@ module.exports = class Auth extends Control {
           userdata['loginTime'] = Moment().format('YYYY-MM-DD HH:mm:ss')
           //所有校验完成，返回结果
           Base_User.updateUser(userdata, [
-              'authorization',
-              'loginTime',
-              'loginError'
-            ])
+            'authorization',
+            'loginTime',
+            'loginError'
+          ])
             .then(updateR => {
               this.successReturn(res, {
                 return_obc: {

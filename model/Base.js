@@ -19,7 +19,8 @@ module.exports = class Base {
    * @returns
    */
   static getDataFormId(id) {
-    const sqlcommand = `SELECT * FROM ` + this.getTabel() + ` WHERE id = ?`
+    const sqlcommand =
+      `SELECT * FROM ` + this.getTabel() + ` WHERE id = ? LIMIT 1 `
     return Mysql.run(sqlcommand, [id])
   }
 
@@ -49,33 +50,35 @@ module.exports = class Base {
       limitcommand += ` LIMIT ${page * pagesize},${pagesize}`
     }
 
-    let ordercommand = ""
+    let ordercommand = ''
     if (order != null) {
       let orderParamASC = []
       let orderParamDESC = []
       order.map(item => {
-        if (item.type == "DESC") {
+        if (item.type == 'DESC') {
           orderParamDESC.push(item.field)
-        } else if (item.type == "ASC") {
+        } else if (item.type == 'ASC') {
           orderParamASC.push(item.field)
         }
       })
       if (orderParamASC.length > 0) {
-        orderParamASC = [orderParamASC.join(', ') + " ASC "]
+        orderParamASC = [orderParamASC.join(', ') + ' ASC ']
       }
       if (orderParamDESC.length > 0) {
-        orderParamDESC = [orderParamDESC.join(', ') + " DESC "]
+        orderParamDESC = [orderParamDESC.join(', ') + ' DESC ']
       }
       let orderParam = orderParamASC.concat(orderParamDESC)
       if (orderParam.length > 0) {
-        ordercommand = " ORDER BY " + orderParam.join(', ')
+        ordercommand = ' ORDER BY ' + orderParam.join(', ')
       }
-
     }
     const sqlfilter = Util.creatFilter(filter)
     const tablename = this.getTabel()
     const sqlcommand =
-      `SELECT * FROM ${tablename} ` + sqlfilter.command + limitcommand + ordercommand
+      `SELECT * FROM ${tablename} ` +
+      sqlfilter.command +
+      limitcommand +
+      ordercommand
 
     return Mysql.run(sqlcommand, sqlfilter.param)
   }
