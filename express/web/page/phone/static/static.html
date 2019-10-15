@@ -1,583 +1,525 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"
-    />
-    <title>EveryTimer</title>
 
-    <script src="../public/third/jquery-3.4.1.min.js"></script>
-    <script src="../public/third/vue.min.js"></script>
-    <!-- 引入element样式 -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+  <title>EveryTimer</title>
 
-    <!-- <link rel="stylesheet" href="../public/third/element-ui.css" /> -->
-    <link
-      rel="stylesheet"
-      href="../public/third/elementStyle/theme/index.css"
-    />
-    <!-- 引入element组件库 -->
-    <!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
-    <script src="../public/third/element-ui.js"></script>
+  <script src="../public/third/jquery-3.4.1.min.js"></script>
+  <script src="../public/third/vue.min.js"></script>
+  <!-- 引入element样式 -->
 
-    <link rel="stylesheet" href="../public/css/iconfont.css" />
-    <link rel="stylesheet" href="../public/css/style.css" />
-    <link rel="stylesheet" href="../public/page/static/static.css" />
+  <!-- <link rel="stylesheet" href="../public/third/element-ui.css" /> -->
+  <link rel="stylesheet" href="../public/third/elementStyle/theme/index.css" />
+  <!-- 引入element组件库 -->
+  <!-- <script src="https://unpkg.com/element-ui/lib/index.js"></script> -->
+  <script src="../public/third/element-ui.js"></script>
 
-    <script src="../public/third/TweenMax.min.js"></script>
-    <script src="../public/third/moment.min.js"></script>
-    <script src="../public/third/snowflakes.min.js"></script>
-    <script src="../public/third/echarts.min.js"></script>
+  <link rel="stylesheet" href="../public/css/iconfont.css" />
+  <link rel="stylesheet" href="../public/css/style.css" />
+  <link rel="stylesheet" href="../public/page/static/static.css" />
 
-    <script src="../public/common.js"></script>
-    <script src="../public/page/static/static.js"></script>
+  <script src="../public/third/TweenMax.min.js"></script>
+  <script src="../public/third/moment.min.js"></script>
+  <script src="../public/third/snowflakes.min.js"></script>
+  <script src="../public/third/echarts.min.js"></script>
 
-    <style>
-      .commonicon {
-        font-size: 2rem;
-      }
-    </style>
-  </head>
+  <script src="../public/common.js"></script>
+  <script src="../public/page/static/static.js"></script>
 
-  <body>
-    <div class="container flexCenter" id="app">
-      <div id="loginContent" class="mBorder flexCenter" v-if="userName===null">
-        <div id="usernamediv" class="flexCenter  mBorder">
-          <input
-            type="text"
-            id="usernameinput"
-            class="mFont"
-            v-model="loginName"
-            placeholder="USERNAME"
-          />
-        </div>
+  <style>
+    .commonicon {
+      font-size: 2rem;
+    }
+  </style>
+</head>
 
-        <div
-          id="loginbutton"
-          class="flexCenter mFont mBorder"
-          v-on:click="loginclick"
-        >
-          ENTER
-        </div>
+<body>
+  <div class="container flexCenter" id="app">
+    <div id="loginContent" class="mBorder flexCenter" v-if="userName===null">
+      <div id="usernamediv" class="flexCenter  mBorder">
+        <input type="text" id="usernameinput" class="mFont" v-model="loginName" placeholder="USERNAME" />
       </div>
-      <div id="realContent" class="flexCenter" v-else>
-        <div
-          id="realHead"
-          class="flexCenter mFont mBorder"
-          v-on:click="updateUserInfo('userName')"
-        >
-          {{ userName }}
-        </div>
 
-        <div
-          id="realCenter"
-          class="flexCenter mFont mBorder"
-          v-bind:style="{height: animate.chartDivHeight+'%'}"
-          v-on:click="openCharts"
-        >
-          <transition name="centerAnima">
-            <div id="chartsDiv" v-show="operateType=='charts'"></div>
-          </transition>
-          <transition name="commoniconAnima">
-            <p
-              v-show="operateType!='charts'"
-              class="flexCenter"
-              style="flex-direction: row;"
-            >
-              <span class="commonicon iconfont icon-arrow-circle-o-top1"></span>
+      <div id="loginbutton" class="flexCenter mFont mBorder" v-on:click="loginclick">
+        ENTER
+      </div>
+    </div>
+    <div id="realContent" class="flexCenter" v-else>
+      <div id="realHead" class="flexCenter mFont mBorder" v-on:click="updateUserInfo('userName')">
+        {{ userName }}
+      </div>
 
-              <span class="mFont">CHARTS</span>
-            </p>
-          </transition>
-        </div>
+      <div id="realCenter" class="flexCenter mFont mBorder" v-bind:style="{height: animate.chartDivHeight+'%'}"
+        v-on:click="openCharts">
+        <transition name="centerAnima">
+          <div id="chartsDiv" v-show="operateType=='charts'"></div>
+        </transition>
+        <transition name="commoniconAnima">
+          <p v-show="operateType!='charts'" class="flexCenter" style="flex-direction: row;">
+            <span class="commonicon iconfont icon-arrow-circle-o-top1"></span>
 
-        <div
-          id="realFooter"
-          class="flexCenter mFont mBorder"
-          v-bind:style="{height: (animate.SumDivHeight-animate.chartDivHeight)+'%'}"
-          v-on:click="openAdd"
-        >
-          <transition name="centerAnima">
-            <div id="addDiv" class="flexCenter" v-show="operateType=='add'">
-              <div id="bodyTimeDiv" class="flexCenter mBorder">
-                <div class="DateTimePickerDiv flexCenter">
-                  <el-date-picker
-                    id="addDatePicker"
-                    v-model="addDate"
-                    type="date"
-                    placeholder="DATE"
-                    :editable="false"
-                    :clearable="false"
-                    value-format="yyyy-MM-dd"
-                    :picker-options="datePickerOptions"
-                  ></el-date-picker>
-                </div>
-                <div class="DateTimePickerDiv flexCenter">
-                  <el-time-select
-                    id="addTimePicker"
-                    v-model="addTime"
-                    :picker-options="{
+            <span class="mFont">CHARTS</span>
+          </p>
+        </transition>
+      </div>
+
+      <div id="realFooter" class="flexCenter mFont mBorder"
+        v-bind:style="{height: (animate.SumDivHeight-animate.chartDivHeight)+'%'}" v-on:click="openAdd">
+        <transition name="centerAnima">
+          <div id="addDiv" class="flexCenter" v-show="operateType=='add'">
+            <div id="bodyTimeDiv" class="flexCenter mBorder">
+              <div class="DateTimePickerDiv flexCenter">
+                <el-date-picker id="addDatePicker" v-model="addDate" type="date" placeholder="DATE" :editable="false"
+                  :clearable="false" value-format="yyyy-MM-dd" :picker-options="datePickerOptions"></el-date-picker>
+              </div>
+              <div class="DateTimePickerDiv flexCenter">
+                <el-time-select id="addTimePicker" v-model="addTime" :picker-options="{
                     start: '05:00',
                     step: '02:00',
                     end: '23:00'
-                    }"
-                    placeholder="TIME"
-                    :editable="false"
-                    :clearable="false"
-                  ></el-time-select>
-                </div>
-              </div>
-              <div id="addWeightDiv" class="flexCenter mBorder">
-                <div id="addWeightInputLabel" class="flexCenter smFont">
-                  WEIGHT
-                </div>
-                <div id="addWeightInputDiv" class="flexCenter ">
-                  <el-input
-                    id="addWeightInput"
-                    v-model="addWeight"
-                    placeholder="输入体重哟"
-                    type="number"
-                  ></el-input>
-                </div>
-                <div id="addWeightInputUnit" class="flexCenter">
-                  <el-dropdown
-                    id="unitDropdown"
-                    class="flexCenter"
-                    @command="weightUnitChange"
-                  >
-                    <p class="smFont">
-                      /{{ weightUnitList[weightUnitKey].title }}
-                    </p>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item
-                        v-for="item of weightUnitList"
-                        v-bind:key="item.key"
-                        v-bind:command="item.key"
-                      >
-                        {{ item.title }}</el-dropdown-item
-                      >
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                </div>
-              </div>
-              <div id="addButtonDiv" class="flexCenter mBorder mFont">
-                <el-button
-                  plain
-                  id="addbutton"
-                  size="medium"
-                  v-on:click="addClick"
-                  >ADD</el-button
-                >
+                    }" placeholder="TIME" :editable="false" :clearable="false"></el-time-select>
               </div>
             </div>
-          </transition>
-          <transition name="commoniconAnima">
-            <p
-              v-show="operateType!='add'"
-              class="flexCenter"
-              style="flex-direction: row;"
-            >
-              <span class="commonicon iconfont icon-arrow-circle-o-top"></span>
-              <span class="mFont">ADD</span>
-            </p>
-          </transition>
-        </div>
+            <div id="addWeightDiv" class="flexCenter mBorder">
+              <div id="addWeightInputLabel" class="flexCenter smFont">
+                WEIGHT
+              </div>
+              <div id="addWeightInputDiv" class="flexCenter ">
+                <el-input id="addWeightInput" v-model="addWeight" placeholder="输入体重哟" type="number"></el-input>
+              </div>
+              <div id="addWeightInputUnit" class="flexCenter">
+                <el-dropdown id="unitDropdown" class="flexCenter" @command="weightUnitChange">
+                  <p class="smFont">
+                    /{{ weightUnitList[weightUnitKey].title }}
+                  </p>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-for="item of weightUnitList" v-bind:key="item.key" v-bind:command="item.key">
+                      {{ item.title }}</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>
+            </div>
+            <div id="addButtonDiv" class="flexCenter mBorder mFont">
+              <el-button plain id="addbutton" size="medium" v-on:click="addClick">ADD</el-button>
+            </div>
+          </div>
+        </transition>
+        <transition name="commoniconAnima">
+          <p v-show="operateType!='add'" class="flexCenter" style="flex-direction: row;">
+            <span class="commonicon iconfont icon-arrow-circle-o-top"></span>
+            <span class="mFont">ADD</span>
+          </p>
+        </transition>
       </div>
     </div>
-  </body>
+  </div>
+</body>
 
-  <script>
-    commonReady(() => {
-      const storageName = localStorage.getItem('loginname')
-      if (storageName != null) {
-        this.app.loginName = storageName
-      }
-      const storageAuthori = localStorage.getItem('authorization')
-      if (storageAuthori != null) {
-        gloal['headers']['authorization'] = storageAuthori
-      }
-    })
-    var gloal = {
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
-      }
+<script>
+  commonReady(() => {
+    const storageName = localStorage.getItem('loginname')
+    if (storageName != null) {
+      this.app.loginName = storageName
     }
+    const storageAuthori = localStorage.getItem('authorization')
+    if (storageAuthori != null) {
+      gloal['headers']['authorization'] = storageAuthori
+    }
+  })
+  var gloal = {
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8'
+    }
+  }
 
-    var app = new Vue({
-      el: '#app',
-      data: {
-        loginName: '',
-        userMessage: '',
-        userName: null,
+  var app = new Vue({
+    el: '#app',
+    data: {
+      loginName: '',
+      userMessage: '',
+      userName: null,
 
-        capulename: null,
-        operateType: 'charts', //add//charts
-        chartdata: [],
-        capulechartdata: [],
-        animate: {
-          chartDivHeight: 64,
-          SumDivHeight: 74
+      capulename: null,
+      operateType: 'charts', //add//charts
+      chartdata: [],
+      capulechartdata: [],
+      animate: {
+        chartDivHeight: 64,
+        SumDivHeight: 74
+      },
+      addDate: moment().format('YYYY-MM-DD'),
+      addTime: moment().format('HH:mm'),
+      addWeight: '',
+      weightUnitKey: 0,
+      weightUnitList: [{
+          key: 0,
+          title: '千克',
+          ratio: 1000
         },
-        addDate: moment().format('YYYY-MM-DD'),
-        addTime: moment().format('HH:mm'),
-        addWeight: '',
-        weightUnitKey: 0,
-        weightUnitList: [
-          {
-            key: 0,
-            title: '千克',
-            ratio: 1000
-          },
-          {
-            key: 1,
-            title: '斤',
-            ratio: 500
-          },
-          {
-            key: 2,
-            title: '克',
-            ratio: 1
-          }
-        ],
-        datePickerOptions: {
-          disabledDate(time) {
-            return time.getTime() > Date.now()
-          }
+        {
+          key: 1,
+          title: '斤',
+          ratio: 500
+        },
+        {
+          key: 2,
+          title: '克',
+          ratio: 1
         }
+      ],
+      datePickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now()
+        }
+      }
+    },
+    watch: {
+      // 如果 `userName` 发生改变，这个函数就会运行
+      userName: function (newValue, oldVlue) {}
+    },
+    methods: {
+      test: function () {
+        console.log('test')
       },
-      watch: {
-        // 如果 `userName` 发生改变，这个函数就会运行
-        userName: function(newValue, oldVlue) {}
-      },
-      methods: {
-        test: function() {
-          console.log('test')
-        },
-        updateUserInfo: function(fieldName) {
-          this.$prompt('请输入名称', '提示', {
+      updateUserInfo: function (fieldName) {
+        this.$prompt('即将修改名称', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
+            inputValue: this[fieldName],
             inputPattern: /^[a-zA-Z0-9]+$/,
             inputErrorMessage: '格式不正确,只能输入数字与字母',
             inputPlaceholder: '请输入名称'
           })
-            .then(({ value }) => {
-              customLoading()
-              customAjax({
-                url: '/usercenter/updateUserInfo',
-                data: { data: { [fieldName]: value } },
-                success: res => {
-                  customLoadingClose()
-                  if (res.return_code == 200 && res.return_obc) {
-                    this.$message({
-                      message: '修改成功了',
-                      type: 'success',
-                      center: true
-                    })
-                  } else {
-                    this.$message({
-                      message: '修改失败了',
-                      type: 'error',
-                      center: true
-                    })
-                  }
+          .then(({
+            value
+          }) => {
+            customAjax({
+              url: '/usercenter/updateUserInfo',
+              data: {
+                data: {
+                  [fieldName]: value
                 }
-              })
-            })
-            .catch(() => {})
-        },
-        //重量单位转化
-        weightUnitChange: function(key) {
-          this.addWeight = this.unitConversion(
-            this.addWeight,
-            this.weightUnitKey,
-            key
-          )
-          this.weightUnitKey = key
-        },
-        //单位转化
-        unitConversion: function(data, pretUnitKey, sufUnitKey, list = null) {
-          if (String(Number(data)) == 'NaN') return 0
-          if (list == null) {
-            list = this.weightUnitList
-          }
+              },
+              success: res => {
+                if (res.return_code == 200 && res.return_obc) {
+                  this.$message({
+                    message: '修改成功了',
+                    type: 'success',
+                    center: true
+                  })
+                  this[fieldName] = value
+                } else {
+                  this.$message({
+                    message: '修改失败了',
+                    type: 'error',
+                    center: true
+                  })
+                }
+              },
+            }, true)
+          })
+          .catch(() => {})
+      },
+      //重量单位转化
+      weightUnitChange: function (key) {
+        this.addWeight = this.unitConversion(
+          this.addWeight,
+          this.weightUnitKey,
+          key
+        )
+        this.weightUnitKey = key
+      },
+      //单位转化
+      unitConversion: function (data, pretUnitKey, sufUnitKey, list = null) {
+        if (String(Number(data)) == 'NaN') return 0
+        if (list == null) {
+          list = this.weightUnitList
+        }
 
-          const pretUnit = list[pretUnitKey]
-          const sufUnit = list[sufUnitKey]
-          return (data * pretUnit.ratio) / sufUnit.ratio
-        },
-        vaildData: function() {
-          if (String(Number(this.addWeight)) == 'NaN') {
-            this.$message({
-              message: '体重只能输入数字啦',
-              type: 'warning',
-              center: true
-            })
-            return false
-          }
-          const weig = this.unitConversion(
-            this.addWeight,
-            this.weightUnitKey,
-            2
-          )
-          if (weig < 20000 || weig > 200000) {
-            this.$message({
-              message: '体重只能在20KG到200KG之间啦',
-              type: 'warning',
-              center: true
-            })
-            return false
-          }
-          if (moment(this.addDate).diff(moment()) > 0) {
-            this.$message({
-              message: '不能选今天之后的时间哟',
-              type: 'warning',
-              center: true
-            })
-            return false
-          }
-          return true
-        },
-        addClick: function() {
-          if (!this.vaildData()) return
-          this.$confirm(
+        const pretUnit = list[pretUnitKey]
+        const sufUnit = list[sufUnitKey]
+        return (data * pretUnit.ratio) / sufUnit.ratio
+      },
+      vaildData: function () {
+        if (String(Number(this.addWeight)) == 'NaN') {
+          this.$message({
+            message: '体重只能输入数字啦',
+            type: 'warning',
+            center: true
+          })
+          return false
+        }
+        const weig = this.unitConversion(
+          this.addWeight,
+          this.weightUnitKey,
+          2
+        )
+        if (weig < 20000 || weig > 200000) {
+          this.$message({
+            message: '体重只能在20KG到200KG之间啦',
+            type: 'warning',
+            center: true
+          })
+          return false
+        }
+        if (moment(this.addDate).diff(moment()) > 0) {
+          this.$message({
+            message: '不能选今天之后的时间哟',
+            type: 'warning',
+            center: true
+          })
+          return false
+        }
+        return true
+      },
+      addClick: function () {
+        if (!this.vaildData()) return
+        this.$confirm(
             `在  ${this.addDate} ${this.addTime} 测量到 ${this.addWeight}` +
-              this.weightUnitList[this.weightUnitKey].title,
-            '提示',
-            {
+            this.weightUnitList[this.weightUnitKey].title,
+            '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
             }
           )
-            .then(() => {
-              this.addWeightPost()
-            })
-            .catch(() => {
-              console.log('test catch')
-            })
-        },
-        addWeightPost: function() {
-          let weight = this.unitConversion(
-            this.addWeight,
-            this.weightUnitKey,
-            2
-          )
-          let bodyTime = this.addDate + ' ' + this.addTime
-
-          showChartLoading(true)
-
-          customLoading()
-          customAjax({
-            url: '/bodycenter/insertbody',
-            data: { data: { weight, bodyTime } },
-            success: res => {
-              showChartLoading(false)
-              customLoadingClose()
-              if (res.return_code == 200 && res.return_obc) {
-                this.$message({
-                  message: '添加成功了哟(^_−)☆',
-                  type: 'success',
-                  center: true
-                })
-                const obc = res.return_obc
-                this.chartdata.push([
-                  obc.bodyTime,
-                  (obc.weight / 1000).toFixed(1),
-                  obc.id
-                ])
-                setOptionChart(this.userName, this.chartdata)
-              } else {
-                this.$message({
-                  message: res.return_msg,
-                  type: 'error',
-                  center: true
-                })
-              }
-            }
+          .then(() => {
+            this.addWeightPost()
           })
-        },
-        openCharts: function() {
-          if (this.operateType != 'charts') {
-            this.operateType = 'charts'
-            TweenLite.to(this.animate, 0.7, {
-              chartDivHeight: 64
-            })
-          }
-        },
-        openAdd: function() {
-          if (this.operateType != 'add') {
-            this.operateType = 'add'
-            TweenLite.to(this.animate, 0.7, {
-              chartDivHeight: 10
-            })
-          }
-        },
-        // 登录点击
-        loginclick: function() {
-          customLoading()
-          customAjax({
-            url: '/auth/signInForUser',
+          .catch(err => {
+            console.log('test catch', err)
+          })
+      },
+      addWeightPost: function () {
+        let weight = this.unitConversion(
+          this.addWeight,
+          this.weightUnitKey,
+          2
+        )
+        let bodyTime = this.addDate + ' ' + this.addTime
+
+        showChartLoading(true)
+        customAjax({
+          url: '/bodycenter/insertbody',
+          data: {
             data: {
-              loginName: this.loginName
-            },
-            success: res => {
-              customLoadingClose()
-              if (res.return_code == 200 && res.return_obc) {
-                this.$message({
-                  message: "登录成功啦(〃'▽'〃)",
-                  type: 'success',
-                  center: true
-                })
-                const obc = res.return_obc
-                this.userName = obc['userName']
-                gloal['headers']['authorization'] = obc['authorization']
-                //持久化储存
-                localStorage.setItem('authorization', obc['authorization'])
-                localStorage.setItem('userName', obc['userName'])
-                localStorage.setItem('loginname', this.loginName)
-
-                this.$nextTick(() => {
-                  this.enterHome()
-                })
-              } else {
-                this.$message.error({
-                  message: res.return_msg,
-                  type: 'error',
-                  center: true
-                })
-              }
+              weight,
+              bodyTime
             }
-          })
-          return
-        },
-        //进入页面调用
-        enterHome: function() {
-          customAjax({
-            type: 'GET',
-            url: '/usercenter/getInfo',
-            success: infores => {
-              const obc = infores.return_obc
-              if (infores.return_code == 200 && obc) {
-                this.userMessage = obc.message
-                let ownUser = obc.smallName || obc.userName
-                const namelist = [ownUser]
-                let capUser = null
-                if (obc.capule) {
-                  const capUser = obc.capule.smallName || obc.capule.userName
-                  this.capulename = capUser
-                  namelist.push(capUser)
-                }
-                initChart(namelist)
-                showChartLoading(true)
-                this.searchData()
-                if (obc.capule) {
-                  this.searchData(true)
-                }
-              }
-            }
-          })
-        },
-        searchData: function(capule = false) {
-          customAjax({
-            url: '/bodycenter/searchbody',
-            data: {
-              data: {
-                capule,
-                filter: [
-                  {
-                    field: 'bodyTime',
-                    operate: 'between',
-                    value: moment()
-                      .subtract(1, 'months')
-                      .format('YYYY-MM-DD'),
-                    extra: moment().format('YYYY-MM-DD HH:mm:ss')
-                  }
-                ],
-                order: [
-                  {
-                    field: 'bodyTime',
-                    type: 'ASC'
-                  }
-                ]
-              }
-            },
-            success: res => {
-              if (res.return_code == 200 && res.return_obc) {
-                const resobc = res.return_obc
-
-                showChartLoading(false)
-                if (!capule) {
-                  this.chartdata = resobc.map(item => [
-                    item.bodyTime,
-                    (item.weight / 1000).toFixed(1),
-                    item.id
-                  ])
-                  setOptionChart(this.userName, this.chartdata)
-                } else {
-                  this.capulechartdata = resobc.map(item => [
-                    item.bodyTime,
-                    (item.weight / 1000).toFixed(1),
-                    item.id
-                  ])
-                  setOptionChart(this.capulename, this.capulechartdata)
-                }
-              }
-            }
-          })
-        },
-        deleteData: function(id) {
-          for (let i = 0; i < this.chartdata.length; i++) {
-            if (Number(this.chartdata[i][2]) == Number(id)) {
-              showChartLoading(true)
-
-              customLoading()
-              customAjax({
-                url: '/bodycenter/deletebody',
-                data: { data: { id } },
-                success: res => {
-                  showChartLoading(false)
-                  customLoadingClose()
-                  if (res.return_code == 200 && res.return_obc) {
-                    this.$message({
-                      message: '删除成功了哟o(´^｀)o',
-                      type: 'success',
-                      center: true
-                    })
-                    this.chartdata.splice(i, 1)
-                    setOptionChart(this.userName, this.chartdata)
-                  } else {
-                    this.$message({
-                      message: '竟然删除失败了!(ಥ_ಥ)',
-                      type: 'error',
-                      center: true
-                    })
-                  }
-                }
+          },
+          success: res => {
+            if (res.return_code == 200 && res.return_obc) {
+              this.$message({
+                message: '添加成功了哟(^_−)☆',
+                type: 'success',
+                center: true
               })
-              return
+              const obc = res.return_obc
+              this.chartdata.push([
+                obc.bodyTime,
+                (obc.weight / 1000).toFixed(1),
+                obc.id
+              ])
+              setOptionChart(this.userName, this.chartdata)
+            } else {
+              this.$message({
+                message: res.return_msg,
+                type: 'error',
+                center: true
+              })
             }
+          },
+          complete: () => {
+            showChartLoading(false)
           }
-          this.$message({
-            message: '已经删除了(￣▽￣)／',
-            type: 'error',
-            center: true
+        }, true)
+      },
+      openCharts: function () {
+        if (this.operateType != 'charts') {
+          this.operateType = 'charts'
+          TweenLite.to(this.animate, 0.7, {
+            chartDivHeight: 64
           })
         }
+      },
+      openAdd: function () {
+        if (this.operateType != 'add') {
+          this.operateType = 'add'
+          TweenLite.to(this.animate, 0.7, {
+            chartDivHeight: 10
+          })
+        }
+      },
+      // 登录点击
+      loginclick: function () {
+
+        customAjax({
+          url: '/auth/signInForUser',
+          data: {
+            loginName: this.loginName
+          },
+          success: res => {
+
+            if (res.return_code == 200 && res.return_obc) {
+              this.$message({
+                message: "登录成功啦(〃'▽'〃)",
+                type: 'success',
+                center: true
+              })
+              const obc = res.return_obc
+              this.userName = obc['userName']
+              gloal['headers']['authorization'] = obc['authorization']
+              //持久化储存
+              localStorage.setItem('authorization', obc['authorization'])
+              localStorage.setItem('userName', obc['userName'])
+              localStorage.setItem('loginname', this.loginName)
+
+              this.$nextTick(() => {
+                this.enterHome()
+              })
+            } else {
+              this.$message.error({
+                message: res.return_msg,
+                type: 'error',
+                center: true
+              })
+            }
+          },
+        }, true)
+        return
+      },
+      //进入页面调用
+      enterHome: function () {
+        customAjax({
+          type: 'GET',
+          url: '/usercenter/getInfo',
+          success: infores => {
+            const obc = infores.return_obc
+            if (infores.return_code == 200 && obc) {
+              this.userMessage = obc.message
+              let ownUser = obc.smallName || obc.userName
+              const namelist = [ownUser]
+              if (obc.capule) {
+                const capUser = obc.capule.smallName || obc.capule.userName
+                this.capulename = capUser
+                namelist.push(capUser)
+              }
+              initChart(namelist)
+              this.searchData(namelist[0])
+              if (obc.capule) {
+                this.searchData(namelist[1], true)
+              }
+            }
+          }
+        }, true)
+      },
+      searchData: function (seriesName, capule = false) {
+        showChartLoading(true)
+        customAjax({
+          url: '/bodycenter/searchbody',
+          data: {
+            data: {
+              capule,
+              filter: [{
+                field: 'bodyTime',
+                operate: 'between',
+                value: moment()
+                  .subtract(1, 'months')
+                  .format('YYYY-MM-DD'),
+                extra: moment().format('YYYY-MM-DD HH:mm:ss')
+              }],
+              order: [{
+                field: 'bodyTime',
+                type: 'ASC'
+              }]
+            }
+          },
+          success: res => {
+            if (res.return_code == 200 && res.return_obc) {
+              const resobc = res.return_obc
+
+
+              if (!capule) {
+                this.chartdata = resobc.map(item => [
+                  item.bodyTime,
+                  (item.weight / 1000).toFixed(1),
+                  item.id
+                ])
+                setOptionChart(seriesName, this.chartdata)
+              } else {
+                this.capulechartdata = resobc.map(item => [
+                  item.bodyTime,
+                  (item.weight / 1000).toFixed(1),
+                  item.id
+                ])
+                setOptionChart(seriesName, this.capulechartdata)
+              }
+            }
+          },
+          complete: () => {
+            showChartLoading(false)
+          }
+        })
+      },
+      deleteData: function (id) {
+        for (let i = 0; i < this.chartdata.length; i++) {
+          if (Number(this.chartdata[i][2]) == Number(id)) {
+            showChartLoading(true)
+            customAjax({
+              url: '/bodycenter/deletebody',
+              data: {
+                data: {
+                  id
+                }
+              },
+              success: res => {
+
+                if (res.return_code == 200 && res.return_obc) {
+                  this.$message({
+                    message: '删除成功了哟o(´^｀)o',
+                    type: 'success',
+                    center: true
+                  })
+                  this.chartdata.splice(i, 1)
+                  setOptionChart(this.userName, this.chartdata)
+                } else {
+                  this.$message({
+                    message: '竟然删除失败了!(ಥ_ಥ)',
+                    type: 'error',
+                    center: true
+                  })
+                }
+              },
+              complete: () => {
+                showChartLoading(false)
+              }
+            }, true)
+            return
+          }
+        }
+        this.$message({
+          message: '已经删除了(￣▽￣)／',
+          type: 'error',
+          center: true
+        })
       }
-    })
-    var deleteClick = function(id) {
-      this.app
-        .$confirm('将删除该记录呢, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-        .then(() => {
-          this.app.deleteData(id)
-        })
-        .catch(() => {})
     }
-  </script>
+  })
+  var deleteClick = function (id) {
+    this.app
+      .$confirm('将删除该记录呢, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+      .then(() => {
+        this.app.deleteData(id)
+      })
+      .catch(() => {})
+  }
+</script>
+
 </html>

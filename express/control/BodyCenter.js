@@ -232,7 +232,11 @@ module.exports = class BodyCenter extends Control {
       return
     }
 
-    let { capule, filter, order } = reqData
+    let {
+      capule,
+      filter,
+      order
+    } = reqData
     if (!order) {
       order = null
     }
@@ -261,9 +265,9 @@ module.exports = class BodyCenter extends Control {
     })
 
     Base_Body.getDataFormFilter({
-      filter,
-      order
-    })
+        filter,
+        order
+      })
       .then(result => {
         this.successReturn(res, {
           return_obc: result

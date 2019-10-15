@@ -152,6 +152,8 @@ module.exports = class Base_User extends Base {
       updatelist.push(user[key])
       fieldcommand.push(` ${key} = ? `)
     }
+    updatelist.push(Moment().format("YYYY-MM-DD HH:mm:ss"))
+    fieldcommand.push(` editTime = ? `)
     updatelist.push(id)
 
     const sqlcommand = `UPDATE base_user SET ${fieldcommand.join(

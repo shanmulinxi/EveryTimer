@@ -33,7 +33,7 @@ module.exports = class UserCenter extends Control {
     _router.get('/getInfo', (req, res) => {
       this.getUserInfo(req, res)
     })
-    _router.get('/updateUserInfo', (req, res) => {
+    _router.post('/updateUserInfo', (req, res) => {
       this.updateUserInfo(req, res)
     })
     _router.post('/changePassword', (req, res) => {
@@ -135,11 +135,12 @@ module.exports = class UserCenter extends Control {
       return
     }
 
-    let { password } = reqData
+    let {
+      password
+    } = reqData
 
     if (
-      !Base_User.verifyData(
-        {
+      !Base_User.verifyData({
           password
         },
         ['password']
@@ -152,13 +153,11 @@ module.exports = class UserCenter extends Control {
     password = Base_User.passwordAddSalt(password)
     password = Base_User.creatMD5(password)
 
-    const filter = [
-      {
-        field: 'id',
-        operate: 'equal',
-        value: reqUser['id']
-      }
-    ]
+    const filter = [{
+      field: 'id',
+      operate: 'equal',
+      value: reqUser['id']
+    }]
     const updateObc = {
       password,
       authorization: null,
