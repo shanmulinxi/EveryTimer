@@ -128,6 +128,8 @@
     if (storageAuthori != null) {
       gloal['headers']['authorization'] = storageAuthori
     }
+
+
   })
   var gloal = {
     headers: {
@@ -175,6 +177,19 @@
           return time.getTime() > Date.now()
         }
       }
+    },
+    created: function () {
+      return
+      const ce = this.$createElement;
+      this.$msgbox({
+        title: '消息',
+        message: ce('p', null, [
+          ce('span', null, '{{userName}}'),
+          ce('i', {
+            style: 'color: teal'
+          }, 'VNode')
+        ]),
+      })
     },
     watch: {
       // 如果 `userName` 发生改变，这个函数就会运行
