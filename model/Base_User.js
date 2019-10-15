@@ -85,7 +85,6 @@ module.exports = class Base_User extends Base {
       ','
     )} ) VALUES ( ${placeholder.join(',')} )`
 
-
     return Mysql.run(sqlcommand, insertDataValues)
   }
 
@@ -148,14 +147,14 @@ module.exports = class Base_User extends Base {
     if (array === 'ALL') {
       array = Object.keys(user)
     }
-    let extercommand = []
+    let fieldcommand = []
     for (let key of array) {
       updatelist.push(user[key])
-      extercommand.push(` ${key} = ? `)
+      fieldcommand.push(` ${key} = ? `)
     }
     updatelist.push(id)
 
-    const sqlcommand = `UPDATE base_user SET ${extercommand.join(
+    const sqlcommand = `UPDATE base_user SET ${fieldcommand.join(
       ','
     )}WHERE id = ?`
     return Mysql.run(sqlcommand, updatelist)

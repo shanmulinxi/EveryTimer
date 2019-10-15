@@ -33,16 +33,50 @@ module.exports = class UserCenter extends Control {
     _router.get('/getInfo', (req, res) => {
       this.getUserInfo(req, res)
     })
+    _router.get('/updateUserInfo', (req, res) => {
+      this.updateUserInfo(req, res)
+    })
     _router.post('/changePassword', (req, res) => {
       this.changePassword(req, res)
     })
     return _router
   }
 
+  updateUserInfo(req, res) {
+    const reqUser = req.body.user || null
+    const reqData = req.body.data || null
+    if (!reqUser || !reqData) {
+      this.failReturn(res, 'NullReqData')
+      return
+    }
+
+    const info = {
+      userName: null,
+      message: null,
+      remark: null,
+      smallName: null,
+      birthday: null
+    }
+
+    let keylist = Object.keys(info)
+    const id = reqUser.id
+    Object.assign(reqUser, reqData)
+    reqUser.id = id
+    Base_User.updateUser(reqUser, keylist)
+      .then(result => {
+        this.successReturn(res)
+        return
+      })
+      .catch(err => {
+        this.failReturn(res, 'SQLError')
+        return
+      })
+  }
+
   getUserInfo(req, res) {
     const reqUser = req.body.user || null
     if (!reqUser) {
-      this.failReturn(res, 'NullReqData', '?没有请求的数据呀?')
+      this.failReturn(res, 'NullReqData')
       return
     }
     const info = {
@@ -52,8 +86,6 @@ module.exports = class UserCenter extends Control {
       remark: null,
       loginTime: 0,
       loginError: 0,
-      // capuleid: null,
-      // capule: null,
       smallName: null,
       birthday: null
     }
@@ -103,13 +135,16 @@ module.exports = class UserCenter extends Control {
       return
     }
 
-    let {
-      password
-    } = reqData
+    let { password } = reqData
 
-    if (!Base_User.verifyData({
-        password
-      }, ['password'])) {
+    if (
+      !Base_User.verifyData(
+        {
+          password
+        },
+        ['password']
+      )
+    ) {
       this.failReturn(res, ErrorCode.UserCenter_changePassword_VerifyData)
       return
     }
@@ -117,11 +152,13 @@ module.exports = class UserCenter extends Control {
     password = Base_User.passwordAddSalt(password)
     password = Base_User.creatMD5(password)
 
-    const filter = [{
-      field: 'id',
-      operate: 'equal',
-      value: reqUser['id']
-    }]
+    const filter = [
+      {
+        field: 'id',
+        operate: 'equal',
+        value: reqUser['id']
+      }
+    ]
     const updateObc = {
       password,
       authorization: null,
