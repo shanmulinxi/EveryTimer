@@ -67,10 +67,10 @@ var initChart = function (seriesnamelist) {
       containLabel: true
     },
     toolbox: {
-      right: '5%',
+      right: '3%',
       show: true,
-      itemSize: 30,
-      itemGap: 15,
+      itemSize: 25,
+      itemGap: 10,
       // top: 55,
       feature: {
         dataZoom: {
@@ -151,6 +151,7 @@ var initChart = function (seriesnamelist) {
         // fontWeight: 'bold',
         fontSize: 14
       },
+      // boundaryGap: ['5%', '5%'],
       type: 'value',
       scale: true,
       axisTick: {
@@ -176,8 +177,9 @@ var initChart = function (seriesnamelist) {
       }
     },
     dataZoom: [{
-      type: 'inside'
+      type: 'inside',
       // throttle: 50
+      startValue: moment().subtract(6, 'M').format('YYYY-MM-DD')
     }],
 
     color: [
@@ -194,9 +196,10 @@ var initChart = function (seriesnamelist) {
         type: 'line',
         // stack: '总量',
         smooth: true,
+        sampling: 'average',
         markPoint: {
           symbol: 'circle',
-          symbolSize: 35,
+          symbolSize: 30,
           label: {
             formatter: function (item) {
               return item.value
@@ -224,7 +227,7 @@ var initChart = function (seriesnamelist) {
         smooth: true,
         markPoint: {
           symbol: 'circle',
-          symbolSize: 35,
+          symbolSize: 30,
           label: {
             formatter: function (item) {
               return item.value

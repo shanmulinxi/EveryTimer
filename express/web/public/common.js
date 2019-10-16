@@ -7,7 +7,7 @@ function commontest() {
   c.log('commontest')
 }
 
-function commonReady(fun) {
+function commonReady(fun = () => {}) {
   $(document).ready(function () {
     // 在DOM加载完成时运行的代码
     var sf = new Snowflakes({

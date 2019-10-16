@@ -4,6 +4,11 @@
   /* height: 2.5em; */
 }
 
+.version {
+  position: fixed;
+  bottom: 2%;
+}
+
 #messgeContent {
   position: absolute;
   padding: 2rem;
@@ -14,13 +19,21 @@
 #loginContent {
   height: 40%;
   width: 70%;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 
 #realContent {
   height: 100%;
   width: 100%;
   justify-content: flex-start;
+}
+
+#loginicondiv {
+  width: 4rem;
+  height: 4rem;
+  background-color: #FFFFFF;
+  border-radius: 1.5rem;
+
 }
 
 #usernamediv {
@@ -176,7 +189,7 @@
 .centerAnima-leave-to
 
 /* .fade-leave-active below version 2.1.8 */
- {
+  {
   transform: scale(1, 0);
   opacity: 0;
 }
@@ -185,7 +198,7 @@
 .centerAnima-leave
 
 /* .fade-leave-active below version 2.1.8 */
- {
+  {
   opacity: 1;
   transform: scale(1, 1);
 }
