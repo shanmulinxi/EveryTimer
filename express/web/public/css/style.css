@@ -29,7 +29,11 @@ input {
   height: 100%;
   width: 100%;
 }
-
+.ssFont {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #fff;
+}
 .sFont {
   font-size: 1.1rem;
   font-weight: bold;
