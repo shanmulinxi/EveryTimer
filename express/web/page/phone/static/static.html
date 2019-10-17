@@ -3,8 +3,8 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport"
-    content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"
+  />
   <title>EveryTimer</title>
 
   <script src="../public/third/jquery-3.4.1.min.js"></script>
@@ -59,16 +59,14 @@
           <span v-on:click="updateUserInfo('userName')">
             {{ userName }}
           </span>
-          <span v-on:click="updateUserInfo('userMessage','message','发出留言吧!')"
-            class="commonicon iconfont icon-xinfeng"></span>
+          <span v-on:click="updateUserInfo('userMessage','message','发出留言吧!')" class="commonicon iconfont icon-xinfeng"></span>
         </p>
         <p class="sFont">
           {{ capuleMessage ? capuleMessage : '' }}
         </p>
       </div>
 
-      <div id="realCenter" class="flexCenter mFont mBorder" v-bind:style="{height: animate.chartDivHeight+'%'}"
-        v-on:click="openCharts">
+      <div id="realCenter" class="flexCenter mFont mBorder" v-bind:style="{height: animate.chartDivHeight+'%'}" v-on:click="openCharts">
         <transition name="centerAnima">
           <div id="chartsDiv" v-show="operateType=='charts'"></div>
         </transition>
@@ -81,14 +79,14 @@
         </transition>
       </div>
 
-      <div id="realFooter" class="flexCenter mFont mBorder"
-        v-bind:style="{height: (animate.SumDivHeight-animate.chartDivHeight)+'%'}" v-on:click="openAdd">
+      <div id="realFooter" class="flexCenter mFont mBorder" v-bind:style="{height: (animate.SumDivHeight-animate.chartDivHeight)+'%'}"
+        v-on:click="openAdd">
         <transition name="centerAnima">
           <div id="addDiv" class="flexCenter" v-show="operateType=='add'">
             <div id="bodyTimeDiv" class="flexCenter mBorder">
               <div class="DateTimePickerDiv flexCenter">
-                <el-date-picker id="addDatePicker" v-model="addDate" type="date" placeholder="DATE" :editable="false"
-                  :clearable="false" value-format="yyyy-MM-dd" :picker-options="datePickerOptions"></el-date-picker>
+                <el-date-picker id="addDatePicker" v-model="addDate" type="date" placeholder="DATE" :editable="false" :clearable="false"
+                  value-format="yyyy-MM-dd" :picker-options="datePickerOptions"></el-date-picker>
               </div>
               <div class="DateTimePickerDiv flexCenter">
                 <el-time-select id="addTimePicker" v-model="addTime" :picker-options="{
@@ -173,20 +171,20 @@
       addWeight: '',
       weightUnitKey: 0,
       weightUnitList: [{
-          key: 0,
-          title: '千克',
-          ratio: 1000
-        },
-        {
-          key: 1,
-          title: '斤',
-          ratio: 500
-        },
-        {
-          key: 2,
-          title: '克',
-          ratio: 1
-        }
+        key: 0,
+        title: '千克',
+        ratio: 1000
+      },
+      {
+        key: 1,
+        title: '斤',
+        ratio: 500
+      },
+      {
+        key: 2,
+        title: '克',
+        ratio: 1
+      }
       ],
       datePickerOptions: {
         disabledDate(time) {
@@ -194,10 +192,10 @@
         }
       }
     },
-    created: function () {},
+    created: function () { },
     watch: {
       // 如果 `userName` 发生改变，这个函数就会运行
-      userName: function (newValue, oldVlue) {}
+      userName: function (newValue, oldVlue) { }
     },
     methods: {
       test: function () {
@@ -224,41 +222,41 @@
         }
         const tip = showTip ? showTip : '修改' + realName.toUpperCase()
         this.$prompt(tip, '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            inputValue: this[fieldName],
-            inputPlaceholder: '请输入' + realName.toUpperCase(),
-            ...option
-          })
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputValue: this[fieldName],
+          inputPlaceholder: '请输入' + realName.toUpperCase(),
+          ...option
+        })
           .then(({
             value
           }) => {
             customAjax({
-                url: '/usercenter/updateUserInfo',
+              url: '/usercenter/updateUserInfo',
+              data: {
                 data: {
-                  data: {
-                    [realName]: value
-                  }
-                },
-                success: res => {
-                  if (res.return_code == 200 && res.return_obc) {
-                    this.customMessage({
-                      message: '修改成功了',
-                      type: 'success'
-                    })
-                    this[fieldName] = value
-                  } else {
-                    this.customMessage({
-                      message: '修改失败了',
-                      type: 'error'
-                    })
-                  }
+                  [realName]: value
                 }
               },
+              success: res => {
+                if (res.return_code == 200 && res.return_obc) {
+                  this.customMessage({
+                    message: '修改成功了',
+                    type: 'success'
+                  })
+                  this[fieldName] = value
+                } else {
+                  this.customMessage({
+                    message: '修改失败了',
+                    type: 'error'
+                  })
+                }
+              }
+            },
               true
             )
           })
-          .catch(() => {})
+          .catch(() => { })
       },
       //重量单位转化
       weightUnitChange: function (key) {
@@ -312,14 +310,14 @@
       addClick: function () {
         if (!this.vaildData()) return
         this.$confirm(
-            `在  ${this.addDate} ${this.addTime} 测量到 ${this.addWeight}` +
-            this.weightUnitList[this.weightUnitKey].title,
-            '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }
-          )
+          `在  ${this.addDate} ${this.addTime} 测量到 ${this.addWeight}` +
+          this.weightUnitList[this.weightUnitKey].title,
+          '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        )
           .then(() => {
             this.addWeightPost()
           })
@@ -338,37 +336,37 @@
 
         showChartLoading(true)
         customAjax({
-            url: '/bodycenter/insertbody',
+          url: '/bodycenter/insertbody',
+          data: {
             data: {
-              data: {
-                weight,
-                bodyTime
-              }
-            },
-            success: res => {
-              if (res.return_code == 200 && res.return_obc) {
-                this.customMessage({
-                  message: '添加成功了哟(^_−)☆',
-                  type: 'success'
-                })
-                const obc = res.return_obc
-                this.chartdata.push([
-                  obc.bodyTime,
-                  (obc.weight / 1000).toFixed(1),
-                  obc.id
-                ])
-                setOptionChart(this.userName, this.chartdata)
-              } else {
-                this.customMessage({
-                  message: res.return_msg,
-                  type: 'error'
-                })
-              }
-            },
-            complete: () => {
-              showChartLoading(false)
+              weight,
+              bodyTime
             }
           },
+          success: res => {
+            if (res.return_code == 200 && res.return_obc) {
+              this.customMessage({
+                message: '添加成功了哟(^_−)☆',
+                type: 'success'
+              })
+              const obc = res.return_obc
+              this.chartdata.push([
+                obc.bodyTime,
+                (obc.weight / 1000).toFixed(1),
+                obc.id
+              ])
+              setOptionChart(this.userName, this.chartdata)
+            } else {
+              this.customMessage({
+                message: res.return_msg,
+                type: 'error'
+              })
+            }
+          },
+          complete: () => {
+            showChartLoading(false)
+          }
+        },
           true
         )
       },
@@ -429,28 +427,28 @@
       //进入页面调用
       enterHome: function () {
         customAjax({
-            type: 'GET',
-            url: '/usercenter/getInfo',
-            success: infores => {
-              const obc = infores.return_obc
-              if (infores.return_code == 200 && obc) {
-                this.userMessage = obc.message
-                let ownUser = obc.smallName || obc.userName
-                const namelist = [ownUser]
-                if (obc.capule) {
-                  const capUser = obc.capule.smallName || obc.capule.userName
-                  this.capuleName = capUser
-                  this.capuleMessage = obc.capule.message
-                  namelist.push(capUser)
-                }
-                initChart(namelist)
-                this.searchData(namelist[0])
-                if (obc.capule) {
-                  this.searchData(namelist[1], true)
-                }
+          type: 'GET',
+          url: '/usercenter/getInfo',
+          success: infores => {
+            const obc = infores.return_obc
+            if (infores.return_code == 200 && obc) {
+              this.userMessage = obc.message
+              let ownUser = obc.smallName || obc.userName
+              const namelist = [ownUser]
+              if (obc.capule) {
+                const capUser = obc.capule.smallName || obc.capule.userName
+                this.capuleName = capUser
+                this.capuleMessage = obc.capule.message
+                namelist.push(capUser)
+              }
+              initChart(namelist)
+              this.searchData(namelist[0])
+              if (obc.capule) {
+                this.searchData(namelist[1], true)
               }
             }
-          },
+          }
+        },
           true
         )
       },
@@ -506,31 +504,31 @@
           if (Number(this.chartdata[i][2]) == Number(id)) {
             showChartLoading(true)
             customAjax({
-                url: '/bodycenter/deletebody',
+              url: '/bodycenter/deletebody',
+              data: {
                 data: {
-                  data: {
-                    id
-                  }
-                },
-                success: res => {
-                  if (res.return_code == 200 && res.return_obc) {
-                    this.customMessage({
-                      message: '删除成功了哟o(´^｀)o',
-                      type: 'success'
-                    })
-                    this.chartdata.splice(i, 1)
-                    setOptionChart(this.userName, this.chartdata)
-                  } else {
-                    this.customMessage({
-                      message: '竟然删除失败了!(ಥ_ಥ)',
-                      type: 'error'
-                    })
-                  }
-                },
-                complete: () => {
-                  showChartLoading(false)
+                  id
                 }
               },
+              success: res => {
+                if (res.return_code == 200 && res.return_obc) {
+                  this.customMessage({
+                    message: '删除成功了哟o(´^｀)o',
+                    type: 'success'
+                  })
+                  this.chartdata.splice(i, 1)
+                  setOptionChart(this.userName, this.chartdata)
+                } else {
+                  this.customMessage({
+                    message: '竟然删除失败了!(ಥ_ಥ)',
+                    type: 'error'
+                  })
+                }
+              },
+              complete: () => {
+                showChartLoading(false)
+              }
+            },
               true
             )
             return
@@ -553,8 +551,9 @@
       .then(() => {
         this.app.deleteData(id)
       })
-      .catch(() => {})
+      .catch(() => { })
   }
+
 </script>
 
 </html>
