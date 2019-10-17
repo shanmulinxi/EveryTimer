@@ -24,7 +24,7 @@ module.exports = class UserCenter extends Control {
         return
       })
       .catch(err => {
-        this.failReturn(res, 'LoginError')
+        super.failReturn(res, 'LoginError')
       })
   }
 

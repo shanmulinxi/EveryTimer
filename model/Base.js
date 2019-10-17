@@ -101,4 +101,21 @@ module.exports = class Base {
       `UPDATE ${tablename} SET ` + setcommand.join(',') + sqlfilter.command
     return Mysql.run(sqlcommand, sqlparam)
   }
+
+  /**
+   * 数据插入
+   * @param {*} operateData 可操作数据原型
+   */
+  static insertBaseData(operateData) {
+    const tablename = this.getTabel()
+    const insertDataKeys = Object.keys(operateData)
+    const placeholder = new Array(insertDataKeys.length).fill('?')
+    const insertDataValues = Object.values(operateData)
+
+    const sqlcommand = `INSERT INTO ${tablename} ( ${insertDataKeys.join(
+      ','
+    )} ) VALUES ( ${placeholder.join(',')} )`
+
+    return Mysql.run(sqlcommand, insertDataValues)
+  }
 }

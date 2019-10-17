@@ -1,6 +1,7 @@
 const express = require('express')
 const fs = require('fs')
 const Moment = require('moment')
+const Request_Log = require('../model/Request_Log')
 
 function init() {
   const app_g = express()
@@ -13,7 +14,7 @@ function init() {
 
   const port = global.config['Debug'] ? 6689 : 80
 
-  var server = app_g.listen(port, function() {
+  var server = app_g.listen(port, function () {
     // var host = server.address().address
     // var port = server.address().port
     // console.log('应用实例，访问地址为 http://%s:%s', host, port)
@@ -48,11 +49,23 @@ function initModel(app) {
   app.use('/public', express.static(__dirname + '/web/public'))
 
   //全局拦截器
-  app.use(function(req, res, next) {
+  app.use(function (req, res, next) {
     const IP = getIp(req)
     const now = Moment().format('YYYY-MM-DD HH:mm:ss')
     const message = `request hostname:${req.hostname} originalUrl:${req.originalUrl} IP:${IP} time:${now}`
     console.log(message)
+    Request_Log.insertData({
+      hostname: req.hostname,
+      originalUrl: req.originalUrl,
+      ip: IP,
+      protocol: req.protocol,
+      headers: JSON.stringify(req.headers),
+      params: JSON.stringify(req.params),
+      method: req.method,
+      body: JSON.stringify(req.body),
+      fresh: req.fresh,
+      xhr: req.xhr,
+    })
     next()
   })
 
@@ -105,14 +118,14 @@ function getIp(req) {
 
 //初始化错误处理机制
 function initErrorHandler(app) {
-  const logErrors = function(err, req, res, next) {
+  const logErrors = function (err, req, res, next) {
     console.error('logErrors', err.stack)
     const IP = getIp(req)
     const errordate = Moment().format('YYYY-MM-DD')
     const errortime = Moment().format('YYYY-MM-DD HH:mm:ss')
     const errorout =
       `time:  [${errortime}]\t\t` +
-      `ips: [${IP}]\n` +
+      `ip: [${IP}]\n` +
       `headers: [${JSON.stringify(req.headers)}]\n` +
       `protocol: [${req.protocol}]\t\t` +
       `hostname: [${req.hostname}]\t\t` +
@@ -126,16 +139,20 @@ function initErrorHandler(app) {
 
     const dir = 'Log/Error/'
     if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true })
+      fs.mkdirSync(dir, {
+        recursive: true
+      })
     }
-    fs.writeFile(`${dir}${errordate}.txt`, errorout, { flag: 'a' }, errw => {
+    fs.writeFile(`${dir}${errordate}.txt`, errorout, {
+      flag: 'a'
+    }, errw => {
       if (errw) throw errw
     })
 
     next(err)
   }
 
-  const clientErrorHandler = function(err, req, res, next) {
+  const clientErrorHandler = function (err, req, res, next) {
     if (req.xhr) {
       res.status(500).send({
         error: 'Something failed!'
@@ -145,7 +162,7 @@ function initErrorHandler(app) {
     }
   }
 
-  const errorHandler = function(err, req, res, next) {
+  const errorHandler = function (err, req, res, next) {
     res.status(500)
     res.render('error', {
       error: err

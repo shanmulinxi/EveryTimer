@@ -27,7 +27,7 @@ module.exports = class BodyCenter extends Control {
         return
       })
       .catch(err => {
-        this.failReturn(res, 'LoginError')
+        super.failReturn(res, 'LoginError')
         return
       })
     //自定义拦截器
