@@ -29,11 +29,13 @@ input {
   height: 100%;
   width: 100%;
 }
+
 .ssFont {
   font-size: 0.9rem;
   font-weight: bold;
   color: #fff;
 }
+
 .sFont {
   font-size: 1.1rem;
   font-weight: bold;
@@ -64,9 +66,12 @@ input {
   justify-content: center;
   align-items: center;
 }
+
 .sBorder {
   border: #fff 0.1rem solid;
+  border-radius: 0.5rem;
 }
+
 .mBorder {
   border: #fff 0.2rem solid;
   border-radius: 1rem;

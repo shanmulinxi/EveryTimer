@@ -60,7 +60,42 @@
   margin-top: 5%;
   height: 15%;
   width: 95%;
+  flex-direction: row;
   justify-content: space-evenly;
+}
+
+.headSide {
+  width: 20%;
+  height: 100%;
+}
+
+#outButton {
+  height: 70%;
+  width: 90%;
+}
+
+#userAndmessage {
+  height: 100%;
+  width: 55%;
+  justify-content: space-evenly;
+}
+
+#messageDiv {
+  width: 100%;
+  overflow: hidden;
+}
+
+#messageP {
+  display: block;
+  white-space: nowrap;
+}
+
+.messageNoAnimate {
+  text-align: center;
+}
+
+.messageAnimate {
+  animation: 10s messageLoop linear infinite normal;
 }
 
 #realCenter {
@@ -211,6 +246,31 @@
 .commoniconAnima-leave-to {
   opacity: 0;
 }
+
+@keyframes messageLoop {
+  0% {
+    transform: translateX(200px);
+    -webkit-transform: translateX(200px);
+  }
+
+  100% {
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+  }
+}
+
+@-webkit-keyframes messageLoop {
+  0% {
+    transform: translateX(200px);
+    -webkit-transform: translateX(200px);
+  }
+
+  100% {
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+  }
+}
+
 
 /* element 覆盖样式 */
 .el-loading-spinner .el-loading-text {
