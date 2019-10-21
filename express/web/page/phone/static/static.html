@@ -166,11 +166,15 @@
     const storageName = localStorage.getItem('loginName')
     if (storageName != null) {
       this.app.loginName = storageName
+      timer = setTimeout(() => {
+        this.app.loginclick()
+      }, 500)
       //自动登录
-      this.app.loginclick()
+
     }
 
   })
+  var timer
   var gloal = {
     headers: {
       'Content-Type': 'application/json; charset=UTF-8'
