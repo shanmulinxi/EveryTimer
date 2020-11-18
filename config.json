@@ -1,0 +1,21 @@
+{
+
+    "Debug": true,
+    "DebugMysql": {
+        "host": "localhost",
+        "port": "3306",
+        "user": "root",
+        "password": "mybaosql-926",
+        "database": "test",
+        "dateStrings": true
+    },
+    "Mysql": {
+        "host": "localhost",
+        "port": "3306",
+        "user": "root",
+        "password": "bao-926",
+        "database": "everytimer",
+        "dateStrings": true
+    },
+    "TokenKey": "D7FD1A07F1326B6E00D8484F30EF56B9"
+}

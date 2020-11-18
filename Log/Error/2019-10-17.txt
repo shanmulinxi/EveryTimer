@@ -1,0 +1,54 @@
+time:  [2019-10-17 22:29:28]		ip: [::1]
+headers: [{"host":"localhost:6689","connection":"keep-alive","upgrade-insecure-requests":"1","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36","sec-fetch-mode":"navigate","sec-fetch-user":"?1","accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3","sec-fetch-site":"none","accept-encoding":"gzip, deflate, br","accept-language":"zh-CN,zh;q=0.9,und;q=0.8","cookie":"authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwMDAwMDAxMjAiLCJsb2dpbk5hbWUiOiJhZG1pbiIsImlhdCI6MTU2Nzg3OTE3NCwiZXhwIjoxNTY3OTY1NTc0fQ.RGDG6qPJjn7hgf1BesJ9CmRgfyAXkofp7-j4a0rWi24; username=admin; username=admin; authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwMDAwMDAxMjAiLCJsb2dpbk5hbWUiOiJhZG1pbiIsImxvZ2luVGltZSI6IjIwMTktMDktMTIgMDc6MzM6NDUiLCJpYXQiOjE1NjgyODgwMjUsImV4cCI6MTU2ODM3NDQyNX0.FGYjzC7XXTQnSVntinrih57z7-myzABMLhVMisNnYjw","if-none-match":"W/\"48c3-16dd4fe04cd\"","if-modified-since":"Wed, 16 Oct 2019 14:34:40 GMT"}]
+protocol: [http]		hostname: [localhost]		originalUrl: [/page]		params: [{}]		method: [GET]
+body: [{}]
+fresh: [false]		xhr: [false]
+errorinfo:
+ReferenceError: Base_User is not defined
+    at Function.insertData (F:\node\EveryTimer\model\Request_Log.js:50:25)
+    at F:\node\EveryTimer\express\index.js:57:17
+    at Layer.handle [as handle_request] (F:\node\EveryTimer\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (F:\node\EveryTimer\node_modules\express\lib\router\index.js:317:13)
+    at F:\node\EveryTimer\node_modules\express\lib\router\index.js:284:7
+    at Function.process_params (F:\node\EveryTimer\node_modules\express\lib\router\index.js:335:12)
+    at next (F:\node\EveryTimer\node_modules\express\lib\router\index.js:275:10)
+    at urlencodedParser (F:\node\EveryTimer\node_modules\body-parser\lib\types\urlencoded.js:91:7)
+    at Layer.handle [as handle_request] (F:\node\EveryTimer\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (F:\node\EveryTimer\node_modules\express\lib\router\index.js:317:13)
+
+time:  [2019-10-17 22:30:05]		ip: [::1]
+headers: [{"host":"localhost:6689","connection":"keep-alive","cache-control":"max-age=0","upgrade-insecure-requests":"1","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36","sec-fetch-mode":"navigate","sec-fetch-user":"?1","accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3","sec-fetch-site":"none","accept-encoding":"gzip, deflate, br","accept-language":"zh-CN,zh;q=0.9,und;q=0.8","cookie":"authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwMDAwMDAxMjAiLCJsb2dpbk5hbWUiOiJhZG1pbiIsImlhdCI6MTU2Nzg3OTE3NCwiZXhwIjoxNTY3OTY1NTc0fQ.RGDG6qPJjn7hgf1BesJ9CmRgfyAXkofp7-j4a0rWi24; username=admin; username=admin; authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwMDAwMDAxMjAiLCJsb2dpbk5hbWUiOiJhZG1pbiIsImxvZ2luVGltZSI6IjIwMTktMDktMTIgMDc6MzM6NDUiLCJpYXQiOjE1NjgyODgwMjUsImV4cCI6MTU2ODM3NDQyNX0.FGYjzC7XXTQnSVntinrih57z7-myzABMLhVMisNnYjw"}]
+protocol: [http]		hostname: [localhost]		originalUrl: [/page]		params: [{}]		method: [GET]
+body: [{}]
+fresh: [false]		xhr: [false]
+errorinfo:
+TypeError: this.getOperateModel is not a function
+    at Function.insertData (F:\node\EveryTimer\model\Request_Log.js:50:30)
+    at F:\node\EveryTimer\express\index.js:57:17
+    at Layer.handle [as handle_request] (F:\node\EveryTimer\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (F:\node\EveryTimer\node_modules\express\lib\router\index.js:317:13)
+    at F:\node\EveryTimer\node_modules\express\lib\router\index.js:284:7
+    at Function.process_params (F:\node\EveryTimer\node_modules\express\lib\router\index.js:335:12)
+    at next (F:\node\EveryTimer\node_modules\express\lib\router\index.js:275:10)
+    at urlencodedParser (F:\node\EveryTimer\node_modules\body-parser\lib\types\urlencoded.js:91:7)
+    at Layer.handle [as handle_request] (F:\node\EveryTimer\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (F:\node\EveryTimer\node_modules\express\lib\router\index.js:317:13)
+
+time:  [2019-10-17 22:38:28]		ip: [::1]
+headers: [{"user-agent":"Fiddler;","content-type":"application/json; charset=UTF-8;","host":"localhost:6689","content-length":"171"}]
+protocol: [http]		hostname: [localhost]		originalUrl: [/bodycenter/searchbody]		params: [{}]		method: [POST]
+body: [{}]
+fresh: [false]		xhr: [false]
+errorinfo:
+TypeError: Cannot read property 'checkHearder' of undefined
+    at initIntercept (F:\node\EveryTimer\express\control\BodyCenter.js:20:8)
+    at Layer.handle [as handle_request] (F:\node\EveryTimer\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (F:\node\EveryTimer\node_modules\express\lib\router\index.js:317:13)
+    at F:\node\EveryTimer\node_modules\express\lib\router\index.js:284:7
+    at Function.process_params (F:\node\EveryTimer\node_modules\express\lib\router\index.js:335:12)
+    at next (F:\node\EveryTimer\node_modules\express\lib\router\index.js:275:10)
+    at F:\node\EveryTimer\express\index.js:69:5
+    at Layer.handle [as handle_request] (F:\node\EveryTimer\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (F:\node\EveryTimer\node_modules\express\lib\router\index.js:317:13)
+    at F:\node\EveryTimer\node_modules\express\lib\router\index.js:284:7
+
